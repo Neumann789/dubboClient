@@ -10,7 +10,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -45,7 +47,7 @@ public class PackageUtil {
 			throws Exception {
 		List<Class> classList = loadJarFileNew(jarFilePath);
 
-		List<Class> facadeList = extractClassListByFilter(classList, new ClassFilter() {
+		Set<Class> facadeList = extractClassListByFilter(classList, new ClassFilter() {
 
 			public boolean filter(Class clazz) {
 				if (clazz.getName().contains("facade")) {
@@ -61,11 +63,10 @@ public class PackageUtil {
 			ServiceClass serviceClass = new ServiceClass();
 
 			serviceClass.setClassName(clazz.getName());
+			
 			serviceClass.setServiceMethods(extractServiceMethods(clazz));
+			
 			serviceClassList.add(serviceClass);
-
-			System.out.println(serviceClass.toString());
-
 		}
 	}
 
@@ -74,7 +75,7 @@ public class PackageUtil {
 		// List<Class> classList=loadJarFiles(jarFilePathArr);
 		List<Class> classList = loadJarFilesNew(jarFilePathArr);
 
-		List<Class> facadeList = extractClassListByFilter(classList, new ClassFilter() {
+		Set<Class> facadeList = extractClassListByFilter(classList, new ClassFilter() {
 
 			public boolean filter(Class clazz) {
 				if (clazz.getName().contains("facade")) {
@@ -200,9 +201,9 @@ public class PackageUtil {
 		
 	}
 
-	public static List<Class> extractClassListByFilter(List<Class> clazzList, ClassFilter filter) {
+	public static Set<Class> extractClassListByFilter(List<Class> clazzList, ClassFilter filter) {
 
-		List<Class> newClassList = new ArrayList<Class>();
+		Set<Class> newClassList = new HashSet<Class>();//·ÀÖØ
 
 		for (Class clazz : clazzList) {
 

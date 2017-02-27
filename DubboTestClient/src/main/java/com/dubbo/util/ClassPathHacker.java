@@ -23,7 +23,6 @@ public static void addFile(File f) throws IOException {
 public static void addURL(URL u) throws IOException {
 
   URLClassLoader sysloader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-  System.out.println(sysloader);
   Class sysclass = URLClassLoader.class;
 
   try {
