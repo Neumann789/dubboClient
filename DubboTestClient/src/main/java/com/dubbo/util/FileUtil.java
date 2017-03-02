@@ -1,13 +1,22 @@
 package com.dubbo.util;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.dubbo.comm.FHBException;
 
 public class FileUtil {
 	
@@ -64,5 +73,33 @@ public class FileUtil {
 		}
 		
 	}
+	
+	
+	public static  List<String> getLineMapList(String filePath){
+		List<String> lineList=new ArrayList<String>();
+		BufferedReader br=null;
+		
+		String buf=null;
+		
+		try {
+			
+			br=new BufferedReader(
+					new InputStreamReader(FileUtil.class.getResourceAsStream(filePath)
+				));
+			
+			while((buf=br.readLine())!=null){
+				if(buf.trim().length()!=0&&!buf.startsWith("#")){
+					lineList.add(buf);
+				}
+			}
+		} catch (Exception e) {
+			logger.error("文件解析失败:"+e.getMessage());
+			throw new FHBException("文件解析失败:"+e.getMessage());
+		}
+		
+		return lineList;
+	}
+	
+	
 	
 }

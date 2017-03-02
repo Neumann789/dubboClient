@@ -22,6 +22,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -183,6 +184,13 @@ public class DubboUI extends JPanel{
 
     private static void initCompoment() {
     	
+    	dubboServiceListComboBox.setBackground(Color.LIGHT_GRAY);
+    	dubboServiceListComboBox.setMaximumRowCount(50);
+    	
+    	
+    	
+    	
+    	
     	final JButton jb1=new JButton("导入jar包");
     	
     	jb1.addActionListener(new ActionListener() {
@@ -267,7 +275,8 @@ public class DubboUI extends JPanel{
 							List<ServiceParam> serviceParamList=sm.getServiceParams();
 							String serviceParamListStr="";
 							for(ServiceParam serviceParam:serviceParamList){
-								serviceParamListStr+=serviceParam.getParamName()+",";
+								serviceParamListStr+=serviceParam.getParamName()
+										.substring(serviceParam.getParamName().lastIndexOf(".")+1)+",";
 							}
 							if(serviceParamListStr.endsWith(",")){
 								serviceParamListStr=serviceParamListStr.substring(0,serviceParamListStr.length()-1);
@@ -303,28 +312,10 @@ public class DubboUI extends JPanel{
 				
 				if(dubboMethodsListComboBox.getSelectedItem()!=null&&methodParamMap.containsKey(dubboMethodsListComboBox.getSelectedItem().toString())){
 					List<ServiceParam> serviceParamList=(List<ServiceParam>)methodParamMap.get(dubboMethodsListComboBox.getSelectedItem().toString());
-					/*int boxNum=0;
-					Box horizontalBox=null;
-					for(ServiceParam sp:serviceParamList){
-						
-						if(boxNum%2==0){
-							horizontalBox=Box.createHorizontalBox();
-						}
-						Box box=Box.createVerticalBox();
-						box.add(new JLabel(sp.getParamName()));
-						TextArea paramTextArea=new TextArea(sp.getParamJsonContent());
-						textAreaParamList.add(paramTextArea);
-						box.add(paramTextArea);
-						horizontalBox.add(box);
-						if(boxNum%2==1){
-							serviceParamListBox.add(Box.createVerticalStrut(10));
-							serviceParamListBox.add(horizontalBox);
-						}
-						boxNum++;
-					}*/
 					
 					for(final ServiceParam sp:serviceParamList){
-						final JButton jb=new JButton(sp.getParamName());
+						final JButton jb=new JButton(sp.getParamName()
+								.substring(sp.getParamName().lastIndexOf(".")+1));
 						jb.addActionListener(new ActionListener() {
 							
 							public void actionPerformed(ActionEvent e) {
@@ -354,8 +345,7 @@ public class DubboUI extends JPanel{
 				
 			}
 		});
-    	
-    	box3.add(new JLabel("zk地址:"));
+    	box3.add(new JLabel("     zk地址:"));
     	zkListComboBox.setEditable(true);
     	box3.add(zkListComboBox);
     	

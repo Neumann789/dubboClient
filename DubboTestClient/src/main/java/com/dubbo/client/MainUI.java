@@ -1,60 +1,39 @@
-package com.dubbo.client.ui;
+package com.dubbo.client;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.FlowLayout;
 import java.awt.Image;
-import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 import javax.imageio.ImageIO;
-import javax.swing.Box;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.JToolBar;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.alibaba.fastjson.JSON;
-import com.dubbo.entity.ServiceClass;
-import com.dubbo.entity.ServiceMethod;
-import com.dubbo.entity.ServiceParam;
 import com.dubbo.util.FileUtil;
-import com.dubbo.util.PackageUtil;
-import com.dubbo.util.SpringUtil;
-import com.dubbo.util.StringUtil;
-import com.dubbo.util.ZKConfigUtil;
+import com.dubbo.util.PropertiesUtil;
 
 public class MainUI {
 
 	private final static Logger logger = LoggerFactory.getLogger(MainUI.class); 
 	
+	public final static String TAGS_CONFIG="/tabs.properties";
 	
 	private static JPanel jpUp=new JPanel();
 	
@@ -62,26 +41,7 @@ public class MainUI {
 	
 	private static JPanel jpMain=new JPanel(jpMainCardLayout);
 	
-	private static  JButton[] tabJBs=new JButton[]{
-		new JButton("DUBBO"),
-		new JButton("HTTP"),
-		new JButton("TCP"),
-		new JButton("RMI")
-	};
-	
-	public static Map<String, JPanel> tabJPanelMap=new HashMap<String, JPanel>();
-	
-	static {
-		
-		tabJPanelMap.put("DUBBO", new DubboUI());
-		tabJPanelMap.put("HTTP", new HttpUI());
-		tabJPanelMap.put("TCP", new TcpUI());
-		tabJPanelMap.put("RMI", new RmiUI());
-	}
-	
 	private static JToolBar jtb=new JToolBar();
-	
-	
 	
 	 /**{
      * 创建并显示GUI。出于线程安全的考虑，
@@ -106,6 +66,7 @@ public class MainUI {
         frame.setVisible(true);
         frame.setSize(800, 800);
         frame.setLocationRelativeTo(null);//设置窗口居中
+        frame.setResizable(false);
         try {
         	Image image=ImageIO.read(MainUI.class.getResource("/images/plog.png"));
 			frame.setIconImage(image);
@@ -188,32 +149,53 @@ public class MainUI {
 	
 	private static void addUITabList(){
 		
-		for(final JButton jb:tabJBs){
+		List<String> lineList=FileUtil.getLineMapList(TAGS_CONFIG);
+		
+		int i=0;
+		
+		for(String line:lineList){
+			
+			String tagName=line.substring(0, line.indexOf("="));
+			String uiClass=line.substring(line.indexOf("=")+1);
+			final JButton jb=new JButton(tagName);
 			jtb.add(BorderLayout.EAST,jb);
 			jtb.addSeparator();
-			jpMain.add(tabJPanelMap.get(jb.getText()), jb.getText());
-	    	
-			jb.addActionListener(new ActionListener() {
+			try {
 				
-				public void actionPerformed(ActionEvent e) {
+				jpMain.add((JPanel)Class.forName(uiClass).newInstance(), jb.getText());
+				
+				jb.addActionListener(new ActionListener() {
 					
-					jpMainCardLayout.show(jpMain, jb.getText());
-					
-					jb.setForeground(Color.red);
-					for(Component c:jtb.getComponents()){
+					public void actionPerformed(ActionEvent e) {
 						
-						if(c.getClass()==JButton.class){
+						jpMainCardLayout.show(jpMain, jb.getText());
+						
+						jb.setForeground(Color.red);
+						for(Component c:jtb.getComponents()){
 							
-							if(jb!=c){
-								c.setForeground(null);
+							if(c.getClass()==JButton.class){
+								
+								if(jb!=c){
+									c.setForeground(null);
+								}
+								
 							}
 							
 						}
 						
 					}
-					
-				}
-			});
+				});
+				
+			} catch (Exception e) {
+				logger.error("ui配置有问题:"+e.getMessage());
+			}
+	    	
+			
+			
+			if(i==0){//默认选择第一个按钮
+				jb.doClick();
+			}
+			i++;
 		}
 		
 	}
