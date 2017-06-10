@@ -1,4 +1,4 @@
-package com.dubbo.client.ui;
+package com.client.ui;
 
 import com.dubbo.util.ClassPathHacker;
 

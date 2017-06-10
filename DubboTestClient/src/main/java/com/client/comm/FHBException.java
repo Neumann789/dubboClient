@@ -1,4 +1,4 @@
-package com.dubbo.comm;
+package com.client.comm;
 
 public class FHBException extends RuntimeException{
 	

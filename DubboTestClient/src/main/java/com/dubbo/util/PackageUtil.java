@@ -8,11 +8,15 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.Map.Entry;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -23,6 +27,7 @@ import org.springframework.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.serializer.ValueFilter;
+import com.client.ui.dubbo.DubboServiceEntity;
 import com.dubbo.entity.ServiceClass;
 import com.dubbo.entity.ServiceMethod;
 import com.dubbo.entity.ServiceParam;
@@ -98,6 +103,47 @@ public class PackageUtil {
 
 		}
 	}
+	
+	public static void loadDubboServiceFromJars(List<ServiceClass> serviceClassList, String[] jarFilePathArr,final TreeMap<Integer, DubboServiceEntity>  dubboServiceTreeMap)
+			throws Exception {
+		// List<Class> classList=loadJarFiles(jarFilePathArr);
+		List<Class> classList = loadJarFilesNew(jarFilePathArr);
+
+		extractDubboServiceListByFilter(classList,serviceClassList, new ClassFilter() {
+
+			public ServiceClass filterDubboService(Class clazz) {
+				
+				if(!clazz.isInterface()){
+					return null;
+				}
+				
+				Collection<DubboServiceEntity> dubboServices=dubboServiceTreeMap.values();
+				
+				for(DubboServiceEntity ds:dubboServices){
+					
+					if(ds.getServiceRule().contains(clazz.getName())){
+						ServiceClass sc=new ServiceClass();
+						sc.setOwnerName(ds.getServiceName());
+						sc.setClassName(clazz.getName());
+						return sc;
+					}
+					
+					if(ClassMatchUtil.isMatch(clazz.getName(), ds.getServiceRule())){
+						ServiceClass sc=new ServiceClass();
+						sc.setOwnerName(ds.getServiceName());
+						sc.setClassName(clazz.getName());
+						return sc;
+					}
+					
+				}
+				
+				return null;
+				
+			}
+		});
+
+	}
+	
 
 	public static Method[] extractMethodsFromClass(Class clazz) {
 
@@ -214,6 +260,26 @@ public class PackageUtil {
 		}
 
 		return newClassList;
+	}
+	
+	public static List<ServiceClass>  extractDubboServiceListByFilter(List<Class> clazzList,List<ServiceClass> serviceClassList, ClassFilter filter) {
+
+		for (Class clazz : clazzList) {
+			
+			ServiceClass sc=filter.filterDubboService(clazz);
+
+			if (sc!=null) {
+				
+				if(!serviceClassList.contains(sc)){
+					
+					sc.setServiceMethods(extractServiceMethods(clazz));
+					
+					serviceClassList.add(sc);
+				}
+			}
+		}
+
+		return serviceClassList;
 	}
 
 	public static List<Class> loadJarFile(String jarFilePath) throws MalformedURLException {

@@ -1,4 +1,4 @@
-package com.dubbo.client;
+package com.client;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -7,7 +7,10 @@ import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +55,7 @@ public class MainUI {
 
         // 创建及设置窗口
         JFrame frame = new JFrame("爱问");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+       // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // 添加 "Hello World" 标签
 //        JLabel label = new JLabel("Hello World");
@@ -67,6 +70,8 @@ public class MainUI {
         frame.setSize(800, 800);
         frame.setLocationRelativeTo(null);//设置窗口居中
         frame.setResizable(false);
+        
+        
         try {
         	Image image=ImageIO.read(MainUI.class.getResource("/images/plog.png"));
 			frame.setIconImage(image);
@@ -74,6 +79,32 @@ public class MainUI {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+        
+        //添加窗口关闭事件
+        frame.addWindowListener(new WindowAdapter() {
+        	
+        	@Override
+        	public void windowClosing(WindowEvent e) {
+        		// TODO Auto-generated method stub
+        		super.windowClosing(e);
+        		
+        		killSelf();
+        		
+        	}
+        	
+        	
+        	public void killSelf(){
+        		String name = ManagementFactory.getRuntimeMXBean().getName();
+        		String pid = name.split("@")[0];
+        		try {
+        			Runtime.getRuntime().exec("taskkill /PID "+pid+" /F");
+        		} catch (IOException e) {
+        			e.printStackTrace();
+        		}
+        	}
+        	
+        	
+		});
         
     }
 
@@ -84,6 +115,7 @@ public class MainUI {
     	frame.add(jpUp, BorderLayout.NORTH);
     	
     	frame.add(jpMain, BorderLayout.CENTER);
+    	//jpMain.setBackground(Color.black);
     	//frame.add(jpMid, BorderLayout.CENTER);
     	frame.setJMenuBar(jmb);
     	
@@ -162,7 +194,8 @@ public class MainUI {
 			jtb.addSeparator();
 			try {
 				
-				jpMain.add((JPanel)Class.forName(uiClass).newInstance(), jb.getText());
+				
+				jpMain.add((JPanel)Class.forName(uiClass).newInstance(),jb.getText());
 				
 				jb.addActionListener(new ActionListener() {
 					
