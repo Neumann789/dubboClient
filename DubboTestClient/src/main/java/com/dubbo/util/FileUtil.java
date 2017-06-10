@@ -38,7 +38,7 @@ public class FileUtil {
 				if(destFile.delete()){
 					destFile.createNewFile();
 				}else{
-					throw new Exception("删除文件失败!");
+					throw new Exception("存在同名文件!");
 				}
 			}
 			

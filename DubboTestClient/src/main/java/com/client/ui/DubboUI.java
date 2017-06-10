@@ -9,6 +9,8 @@ import java.awt.FlowLayout;
 import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileFilter;
 import java.lang.reflect.InvocationTargetException;
@@ -40,6 +42,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -47,18 +51,21 @@ import javax.swing.table.DefaultTableModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.alibaba.dubbo.common.utils.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.client.MainUI;
 import com.client.ui.dubbo.DubboServiceEntity;
 import com.dubbo.entity.ServiceClass;
 import com.dubbo.entity.ServiceMethod;
 import com.dubbo.entity.ServiceParam;
+import com.dubbo.util.ClassMatchUtil;
 import com.dubbo.util.ConfigUtil;
 import com.dubbo.util.FileUtil;
 import com.dubbo.util.PackageUtil;
 import com.dubbo.util.SpringUtil;
 import com.dubbo.util.StringUtil;
 
+@SuppressWarnings("all")
 public class DubboUI extends JPanel{
 
 	private final static Logger logger = LoggerFactory.getLogger(DubboUI.class); 
@@ -67,7 +74,7 @@ public class DubboUI extends JPanel{
 	
 	private  static Map methodParamMap=new HashMap();
 	
-	private static String PATH_DEFAULT="D:/dubbclient/";
+	private static String PATH_DEFAULT="D:/dubboclient/";
 	
 	private static String PATH_JAR="jars/";
 	
@@ -113,6 +120,8 @@ public class DubboUI extends JPanel{
 	
 	private static String[] titles = {"编号","服务名", "服务类路径","开发人"};
 	
+	private static String[] classParamTitles = {"类名"};
+	
 	public DubboUI() {
 		this.setLayout(new BorderLayout());
 		this.add(jpMid,BorderLayout.NORTH);
@@ -121,6 +130,8 @@ public class DubboUI extends JPanel{
 		initCompoment();
 		//初始化数据
 		initDataList();
+		
+		refresh();
 	}
 	
 	
@@ -188,11 +199,7 @@ public class DubboUI extends JPanel{
 	}
 	
 	private static void refreshDubboList(){
-		
 		dubboServiceTreeMap=ConfigUtil.readDubboServices(PATH_DEFAULT+DUBBO_LIST);
-		//dubboServiceTreeMap.put(0, new DubboServiceEntity("test", "*facade*", "阿保"));
-		//dubboServiceTreeMap.put(1, new DubboServiceEntity("service", "*Service*", "阿保"));
-		
 	}
 	
 	private static void refreshZkList(){
@@ -279,11 +286,14 @@ public class DubboUI extends JPanel{
     	final JButton importJarJButton=new JButton("导入jar包");
     	final JButton serviceRuleJButton=new JButton("规则设置");
     	final JButton refreshJarJButton=new JButton("刷新服务");
+    	final JButton genJsonJButton=new JButton("JSON服务");
     	box0.add(importJarJButton);
     	box0.add(Box.createHorizontalStrut(20));
     	box0.add(serviceRuleJButton);
     	box0.add(Box.createHorizontalStrut(20));
     	box0.add(refreshJarJButton);
+    	box0.add(Box.createHorizontalStrut(20));
+    	box0.add(genJsonJButton);
 
     	
     	//显示dubbo服务列表
@@ -346,6 +356,7 @@ public class DubboUI extends JPanel{
 				JFileChooser filechooser = new JFileChooser();//创建文件选择器
 		        filechooser.setCurrentDirectory(new File(PATH_DEFAULT+PATH_JAR));//设置当前目录
 		        filechooser.setAcceptAllFileFilterUsed(false);
+		        filechooser.setMultiSelectionEnabled(true);
 		        //显示所有文件
 		        filechooser.addChoosableFileFilter(new javax.swing.filechooser.FileFilter() {
 		            public boolean accept(File f) {
@@ -364,37 +375,41 @@ public class DubboUI extends JPanel{
 		        if (returnVal == JFileChooser.APPROVE_OPTION) {
 		        	boolean isImportSuc=true;
 		        	String importResult="";
-		            try {
-		            	//移动jar包
-		            	String srcPath=PATH_DEFAULT+PATH_JAR+filechooser.getSelectedFile().getName();
-		            	//String destPath=StringUtil.addFileStamp(srcPath);//添加时间戳
-		            	//FileUtil.moveFile(filechooser.getSelectedFile().getAbsolutePath(),destPath );
-		            	//PackageUtil.loadFacadeClassFromJar(serviceClassList, destPath);
-		            	//unLoad();//卸载
-		            	//将服务类放注册到spring容器中去
-		        		//registDubboConsumer();
-		        		//初始化列表数据
-		        		//initDataList();
-		            	isImportSuc=true;;
-						logger.info("jar包导入成功,若需生效需重启!");
-					} catch (Exception e) {
-						logger.error(filechooser.getSelectedFile().getAbsolutePath()+"jar失败,失败原因:"+e.getMessage());
-						e.printStackTrace();
-						isImportSuc=false;
-					}
+		        	for(File file:filechooser.getSelectedFiles()){
+		        		try {
+			            	//移动jar包
+			            	String srcPath=PATH_DEFAULT+PATH_JAR+file.getName();
+			            	//String destPath=StringUtil.addFileStamp(srcPath);//添加时间戳
+			            	FileUtil.moveFile(file.getAbsolutePath(),srcPath );
+			            	//PackageUtil.loadFacadeClassFromJar(serviceClassList, destPath);
+			            	//unLoad();//卸载
+			            	//将服务类放注册到spring容器中去
+			        		//registDubboConsumer();
+			        		//初始化列表数据
+			        		//initDataList();
+			            	isImportSuc=true;;
+							//logger.info("jar包导入成功,若需生效需重启!");
+						} catch (Exception e) {
+							logger.error(filechooser.getSelectedFile().getAbsolutePath()+"jar失败,失败原因:"+e.getMessage());
+							e.printStackTrace();
+							isImportSuc=false;
+						}
+		        	}
+		            
 		            
 		            if(isImportSuc){
-		            	int res=JOptionPane.showConfirmDialog(null, "jar包导入成功,生效需重启", "提示", JOptionPane.YES_NO_OPTION);
+		            	JOptionPane.showMessageDialog(null, "jar包导入成功,刷新服务即可生效！", "提示", JOptionPane.INFORMATION_MESSAGE);
+		            	/*int res=JOptionPane.showConfirmDialog(null, "jar包导入成功,刷新服务即可生效！", "提示", JOptionPane.YES_NO_OPTION);
 		            	if(res==JOptionPane.YES_OPTION){ 
 		            		System.out.println("选择是后执行的代码");    //点击“是”后执行这个代码块
-		            		restart();
+		            		//restart();
 		            	}else{
 		            		 System.out.println("选择否后执行的代码");    //点击“否”后执行这个代码块
 		            	 
-		            	} 
+		            	}*/ 
 		            }else{
 		            	
-		            	JOptionPane.showMessageDialog(null, "异常", "jar包导入失败", JOptionPane.ERROR_MESSAGE);
+		            	JOptionPane.showMessageDialog(null, "jar包导入失败！", "异常", JOptionPane.ERROR_MESSAGE);
 		            }
 
 		        }
@@ -407,6 +422,60 @@ public class DubboUI extends JPanel{
 			public void actionPerformed(ActionEvent e) {
 				
 				refresh();
+			}
+		});
+    	
+    	
+    	genJsonJButton.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				
+				final JDialog jDialog=new JDialog();
+				jDialog.setTitle("JSON服务");
+				JPanel  operateJPanel=new JPanel();
+				JScrollPane  listJPanel=new JScrollPane();
+				final JPanel  ruleContentJPanel=new JPanel();
+				jDialog.add(operateJPanel,BorderLayout.NORTH);
+				jDialog.add(listJPanel,BorderLayout.CENTER);
+				jDialog.add(ruleContentJPanel ,BorderLayout.SOUTH);
+				ruleContentJPanel.setVisible(false);
+				jDialog.setVisible(true);
+				jDialog.setSize(500, 500);
+		        jDialog.setLocationRelativeTo(null);//设置窗口居中
+		        
+		        
+		       // JButton addJButton=new JButton("添加");
+		        final JTextField classJtf=new JTextField(20);
+		        JButton classSearchJButton=new JButton("类搜索");
+		        final JLabel countJtf=new JLabel();
+		        //operateJPanel.add(addJButton);
+		        operateJPanel.add(classJtf);
+		        operateJPanel.add(classSearchJButton);
+		        operateJPanel.add(countJtf);
+		        
+		        final JTable jTable = new JTable();
+		        DefaultTableCellRenderer   r   =   new   DefaultTableCellRenderer();     
+		        r.setHorizontalAlignment(JLabel.CENTER);     
+		        jTable.setDefaultRenderer(Object.class, r);
+		        Object[][] result=getColumnlistForParamClass();
+		        jTable.setModel(new TableValues(classParamTitles,result));
+			    listJPanel.setViewportView(jTable);
+			    countJtf.setText(String.valueOf(result.length));
+			    addJsonJTableMouseListener(jTable);
+			    
+			    classSearchJButton.addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						String classKey=classJtf.getText();
+						
+						freshJsonTable(jTable,countJtf, classKey);
+					}
+				});	
+			    
+			    
+			    
+				
 			}
 		});
     	
@@ -767,8 +836,7 @@ public class DubboUI extends JPanel{
     	if(dubboServiceTreeMap.isEmpty()){
     		
     		return new Object[][]{
-    				{"0","test","*facade*","阿保"},
-    				{"1","service","*Service*","阿保"}
+    				{"0","service","*Service*","阿保"}
     		};
     		
     	}
@@ -794,6 +862,56 @@ public class DubboUI extends JPanel{
     	return columnList;
     }
     
+private static Object[][] getColumnlistForParamClass(){
+    	
+    	
+    	Object[][] columnList=new Object[PackageUtil.paramClassSet.size()][1];
+    	
+    	
+    	
+    	Iterator<Class> iterator=PackageUtil.paramClassSet.iterator();
+    	
+    	for(int i=0;i<PackageUtil.paramClassSet.size();iterator.hasNext()) {
+    		Class e = iterator.next();
+    		columnList[i]=new Object[]{
+    				e.getName()
+    		};
+    		i++;
+        }
+    	
+    	return columnList;
+    }
+    
+
+	private static Object[][] getColumnlistForParamClass(String clazzRuleKey){
+		
+		HashSet<Class> resultSet=new HashSet<>();
+		
+		clazzRuleKey=clazzRuleKey.trim();//去除左右空格
+		
+		clazzRuleKey="*"+clazzRuleKey+"*";
+		
+		for(Class clazz:PackageUtil.paramClassSet){
+			if(ClassMatchUtil.isMatch(clazz.getName(), clazzRuleKey)){
+				resultSet.add(clazz);
+			}
+		}
+		
+		Object[][] columnList=new Object[resultSet.size()][1];
+		
+		int i=0;
+		for(Class clazz:resultSet){
+			if(ClassMatchUtil.isMatch(clazz.getName(), clazzRuleKey)){
+				columnList[i]=new Object[]{
+						clazz.getName()
+				};
+				i++;
+			}
+		}
+		
+		
+		return columnList;
+	}
     
     private static  void freshRuleTable(JTable jTable,JPanel  ruleContentJPanel){
     	
@@ -801,6 +919,55 @@ public class DubboUI extends JPanel{
     	
     	ruleContentJPanel.validate();
     	
+    }
+    
+    private static  void freshJsonTable(JTable jTable,JLabel countJtf,String classRuleKey){
+    	Object[][] result=getColumnlistForParamClass(classRuleKey);
+    	jTable.setModel(new TableValues(classParamTitles,result));
+    	
+    	countJtf.setText(String.valueOf(result.length));
+    	
+    }
+    
+    public static void addJsonJTableMouseListener(final JTable jTable){
+		
+		 jTable.addMouseListener(new MouseAdapter() {
+		    	
+		    	@Override
+		    	public void mouseClicked(MouseEvent e) {
+		    		
+		    		if(e.getClickCount()==2){//双击
+		    			int row=jTable.rowAtPoint(e.getPoint());
+		    			String value=(String)jTable.getValueAt(row, 0);
+		    			//System.out.println("行号:"+row+" 内容为："+value);
+		    			String jsonStr="";
+		    			try {
+							jsonStr=StringUtil.genJsonStrPrettyFormat(Class.forName(value).newInstance());
+							showMsg(jsonStr);
+						} catch (Exception e1) {
+							showMsg(e1.getMessage());
+						}
+		    		}
+		    	}
+			});
+		
+	}
+    
+    public static void showMsg(String cntext){
+    	final JDialog jDialog=new JDialog();
+		jDialog.setTitle("信息");
+		final JPanel  contentJPanel=new JPanel();
+		JScrollPane  scrollPane=new JScrollPane(contentJPanel);
+		jDialog.add(scrollPane ,BorderLayout.CENTER);
+		scrollPane.setVisible(true);
+		jDialog.setVisible(true);
+		jDialog.setSize(500, 500);
+        jDialog.setLocationRelativeTo(null);//设置窗口居中
+        
+        
+        JTextArea jtaContext=new JTextArea(500, 500);
+        jtaContext.setText(cntext);
+        contentJPanel.add(jtaContext);
     }
 
 }

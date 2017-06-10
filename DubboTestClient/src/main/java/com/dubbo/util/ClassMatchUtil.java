@@ -12,10 +12,12 @@ public class ClassMatchUtil {
 	 */
 	public static boolean isMatch(String className,String rule){
 		
-		
-		
+		//不区分大小写，统一转成小写匹配
+		className=className.toLowerCase();
+		rule=rule.toLowerCase();
 		//对*的支持支持正则匹配
 		String patternRule=rule.replaceAll("\\*", "[\\\\w\\\\W]*");
+		
 		if(Pattern.matches(patternRule, className)){
 			return true;
 		}

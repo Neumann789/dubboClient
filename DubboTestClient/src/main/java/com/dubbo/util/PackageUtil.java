@@ -3,6 +3,8 @@ package com.dubbo.util;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -13,11 +15,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.Map.Entry;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -36,6 +36,8 @@ import com.dubbo.entity.ServiceParam;
 public class PackageUtil {
 
 	private static URLClassLoader myClassLoader;
+	
+	public static HashSet<Class> paramClassSet=new HashSet<>();
 
 	private final static Logger logger = LoggerFactory.getLogger(PackageUtil.class);
 
@@ -171,70 +173,20 @@ public class PackageUtil {
 			
 			Class[] paramTypes=methods[i].getParameterTypes();
 			
+			Type[] genericParameterTypes=methods[i].getGenericParameterTypes();
+			
 			List<ServiceParam> serviceParams=new ArrayList<ServiceParam>();
 			
 			for(int j=0;j<paramTypes.length;j++){
 				
 				ServiceParam serviceParam=new ServiceParam();
 				
-				
 				serviceParam.setParamName(chgPrimitiveType(paramTypes[j].getName()));
 				
 				try {
-					serviceParam.setParamJsonContent(JSON.toJSONString(paramTypes[j].newInstance(), new ValueFilter() {
-						
-						public Object process(Object object, String name, Object value) {
-							
-							Method method=null;
-							Class  type=null;
-							if(value==null){
-								
-							
-							try {
-								method=object.getClass().getMethod("get"+StringUtils.capitalize(name), null);
-								
-								type=method.getReturnType();
-							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} 
-							
-							if(type == String.class){
-								value="";
-							}else if(type == Byte.class || 
-									 type ==  Character.class ||
-									 type ==  Short.class||
-									 type ==  Integer.class||
-									 type ==  Long.class){
-								value=0;
-								
-							}else if(type ==  Boolean.class){
-								
-								value = true;
-								
-							}else if(type ==  Float.class){
-								value = 0.0f;
-							}else if(type ==  Double.class){
-								value = 0.0;
-							}else if(type ==  Timestamp.class){
-								value = new Timestamp(new Date().getTime());
-							}else if(type ==  BigDecimal.class){
-								value =new BigDecimal(0);
-							}else{
-								
-								try {
-									value=type.newInstance();
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							
-							}
-						
-							return value;
-						}
-							return value;
-							
-					}}, SerializerFeature.PrettyFormat));
+					
+					serviceParam.setParamJsonContent(StringUtil.genJsonStrPrettyFormat(paramTypes[j].newInstance()));
+					
 				} catch (Exception e) {
 					logger.error(e.getMessage());
 				} 
@@ -406,6 +358,7 @@ public class PackageUtil {
 			try {
 				clazz = Class.forName(className);
 				classList.add(clazz);
+				paramClassSet.add(clazz);
 				// System.out.println(clazz.getName());
 			} catch (Throwable e) {
 				System.out.println(className + "¼ÓÔØÊ§°Ü,Ê§°ÜÔ­Òò£º" + e.getMessage());
@@ -600,8 +553,9 @@ public class PackageUtil {
 	 */
 	private static List<String> getClassListByJarFile(String jarFilePath, boolean childPackage) {
 		List<String> classList = new ArrayList<String>();
+		JarFile jarFile=null;
 		try {
-			JarFile jarFile = new JarFile(jarFilePath);
+			jarFile = new JarFile(jarFilePath);
 			Enumeration<JarEntry> entrys = jarFile.entries();
 			while (entrys.hasMoreElements()) {
 				JarEntry jarEntry = entrys.nextElement();
@@ -624,7 +578,17 @@ public class PackageUtil {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
+		}finally {
+			
+			if(jarFile!=null){
+				try {
+					jarFile.close();
+				} catch (IOException e) {
+					logger.error(e.getMessage(),e);
+				}
+			}
+			
 		}
 		return classList;
 	}
