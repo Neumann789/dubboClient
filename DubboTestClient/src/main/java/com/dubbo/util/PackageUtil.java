@@ -3,6 +3,7 @@ package com.dubbo.util;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -128,6 +129,7 @@ public class PackageUtil {
 						return sc;
 					}
 					
+					
 					if(ClassMatchUtil.isMatch(clazz.getName(), ds.getServiceRule())){
 						ServiceClass sc=new ServiceClass();
 						sc.setOwnerName(ds.getServiceName());
@@ -175,6 +177,7 @@ public class PackageUtil {
 				
 				ServiceParam serviceParam=new ServiceParam();
 				
+				
 				serviceParam.setParamName(chgPrimitiveType(paramTypes[j].getName()));
 				
 				try {
@@ -215,6 +218,8 @@ public class PackageUtil {
 								value = 0.0;
 							}else if(type ==  Timestamp.class){
 								value = new Timestamp(new Date().getTime());
+							}else if(type ==  BigDecimal.class){
+								value =new BigDecimal(0);
 							}else{
 								
 								try {

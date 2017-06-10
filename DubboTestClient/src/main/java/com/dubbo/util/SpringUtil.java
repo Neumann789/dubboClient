@@ -34,9 +34,9 @@ public class SpringUtil {
 
 		Map map = ac.getBeansOfType(RegistryConfig.class);
 
-		for (Object obj : map.keySet()) {
+		/*for (Object obj : map.keySet()) {
 			unregisterBean((String) obj);
-		}
+		}*/
 
 		System.out.println(SpringUtil.getBean("127.0.0.1:2181"));
 
@@ -67,11 +67,11 @@ public class SpringUtil {
 			beanFactory.destroySingleton(beanName);
 		}*/
 
-		ConfigUtils.getProperty("dubbo.registry.address");
+		//ConfigUtils.getProperty("dubbo.registry.address");
 	//	ConfigUtils.
-	//	beanFactory.registerBeanDefinition(beanName, bdb.genBeanDefinitionBuilder().getRawBeanDefinition());
+		beanFactory.registerBeanDefinition(beanName, bdb.genBeanDefinitionBuilder().getRawBeanDefinition());
 
-		//logger.info(beanName + "注册成功!");
+		logger.info(beanName + "注册成功!");
 	}
 
 	public static void registDubboConsumer(final String beanName) {
@@ -83,7 +83,7 @@ public class SpringUtil {
 				beanDefinitionBuilder.addPropertyValue("check", "false");
 				beanDefinitionBuilder.addPropertyValue("cache", "true");
 				beanDefinitionBuilder.addPropertyValue("retries", "0");
-				beanDefinitionBuilder.addPropertyValue("timeout", "30");
+				beanDefinitionBuilder.addPropertyValue("timeout", "30000");
 				beanDefinitionBuilder.addPropertyValue("interface", beanName);
 
 				return beanDefinitionBuilder;
@@ -93,12 +93,26 @@ public class SpringUtil {
 
 	public static void registZK(final String beanName, final String address) {
 		
-		Map map = ac.getBeansOfType(RegistryConfig.class);
-
-		for (Object obj : map.keySet()) {
-			String beanId = (String) obj;
-			beanFactory.destroySingleton(beanName);
+		
+		try {
+			
+			if(beanFactory.getBean(beanName)!=null){
+				
+				return;
+				
+			}
+			
+		} catch (Exception e) {
+			
 		}
+		
+		
+//		Map map = ac.getBeansOfType(RegistryConfig.class);
+//
+//		for (Object obj : map.keySet()) {
+//			String beanId = (String) obj;
+//			beanFactory.destroySingleton(beanName);
+//		}
 		registBean(beanName, new BDBuilder() {
 			public BeanDefinitionBuilder genBeanDefinitionBuilder() {
 				BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder
@@ -117,9 +131,9 @@ public class SpringUtil {
 		try {
 			return (T) beanFactory.getBean(beanName);
 		} catch (NoSuchBeanDefinitionException e) {
-			logger.error(e.getMessage(), e);
-			registDubboConsumer(beanName);
-			return (T) beanFactory.getBean(beanName);
+			logger.info(beanName+"不存在,重新注册");
+			//registDubboConsumer(beanName);
+			//return (T) beanFactory.getBean(beanName);
 		}catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}

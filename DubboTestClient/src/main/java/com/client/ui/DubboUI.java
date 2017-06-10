@@ -190,6 +190,8 @@ public class DubboUI extends JPanel{
 	private static void refreshDubboList(){
 		
 		dubboServiceTreeMap=ConfigUtil.readDubboServices(PATH_DEFAULT+DUBBO_LIST);
+		//dubboServiceTreeMap.put(0, new DubboServiceEntity("test", "*facade*", "阿保"));
+		//dubboServiceTreeMap.put(1, new DubboServiceEntity("service", "*Service*", "阿保"));
 		
 	}
 	
@@ -239,6 +241,7 @@ public class DubboUI extends JPanel{
 			}
 			try {
 				//PackageUtil.loadFacadeClassFromJars(serviceClassList, jarFilePathArr);
+				serviceClassList.clear();//清空服务集合
 				PackageUtil.loadDubboServiceFromJars(serviceClassList, jarFilePathArr, dubboServiceTreeMap);
 				logger.info(jarFilePathArr+"加载成功!");
 			} catch (Exception e) {
@@ -364,8 +367,8 @@ public class DubboUI extends JPanel{
 		            try {
 		            	//移动jar包
 		            	String srcPath=PATH_DEFAULT+PATH_JAR+filechooser.getSelectedFile().getName();
-		            	String destPath=StringUtil.addFileStamp(srcPath);//添加时间戳
-		            	FileUtil.moveFile(filechooser.getSelectedFile().getAbsolutePath(),destPath );
+		            	//String destPath=StringUtil.addFileStamp(srcPath);//添加时间戳
+		            	//FileUtil.moveFile(filechooser.getSelectedFile().getAbsolutePath(),destPath );
 		            	//PackageUtil.loadFacadeClassFromJar(serviceClassList, destPath);
 		            	//unLoad();//卸载
 		            	//将服务类放注册到spring容器中去
@@ -648,6 +651,8 @@ public class DubboUI extends JPanel{
 					NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 				String responseMsg;
 				String address=zkListComboBox.getSelectedItem().toString().trim();
+				
+				FileUtil.saveFile(address, PATH_DEFAULT+ZKCONFIG_LIST);
 				zkLineSet.add(address);
 				refreshZkListComboBox(zkLineSet);
 				
@@ -762,7 +767,8 @@ public class DubboUI extends JPanel{
     	if(dubboServiceTreeMap.isEmpty()){
     		
     		return new Object[][]{
-    				{"0","test","*facade*","阿保"}
+    				{"0","test","*facade*","阿保"},
+    				{"1","service","*Service*","阿保"}
     		};
     		
     	}

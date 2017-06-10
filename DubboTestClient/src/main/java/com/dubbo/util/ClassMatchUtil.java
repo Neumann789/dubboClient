@@ -1,5 +1,7 @@
 package com.dubbo.util;
 
+import java.util.regex.Pattern;
+
 public class ClassMatchUtil {
 	
 	/**
@@ -9,6 +11,14 @@ public class ClassMatchUtil {
 	 * @return
 	 */
 	public static boolean isMatch(String className,String rule){
+		
+		
+		
+		//对*的支持支持正则匹配
+		String patternRule=rule.replaceAll("\\*", "[\\\\w\\\\W]*");
+		if(Pattern.matches(patternRule, className)){
+			return true;
+		}
 		
 		String[] classNameArr=className.split("\\.");
 		String[] ruleArr=rule.split("\\.");
@@ -34,11 +44,13 @@ public class ClassMatchUtil {
 			}
 		}
 		
+		
+		
 		return isMatch;
 	}
 	
 	public static void main(String[] args) {
-		boolean flag=isMatch("com.zb.Test", "com.zb2.*");
+		boolean flag=isMatch("com.zb.Test", "*zb*");
 		System.out.println("flag==> "+flag);
 		
 	}

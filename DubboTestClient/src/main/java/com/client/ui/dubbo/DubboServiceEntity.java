@@ -13,6 +13,14 @@ public class DubboServiceEntity {
 	private String serviceRule;
 	
 	private String serviceDeveloper;
+	
+	public DubboServiceEntity(){}
+	
+	public DubboServiceEntity(String serviceName,String serviceRule,String serviceDeveloper){
+		this.serviceName=serviceName;
+		this.serviceRule=serviceRule;
+		this.serviceDeveloper=serviceDeveloper;
+	}
 
 	public String getServiceName() {
 		return serviceName;
