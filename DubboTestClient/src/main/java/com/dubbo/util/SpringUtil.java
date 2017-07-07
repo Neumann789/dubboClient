@@ -1,5 +1,6 @@
 package com.dubbo.util;
 
+import java.io.IOException;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -24,21 +25,24 @@ public class SpringUtil {
 
 	private final static Logger logger = LoggerFactory.getLogger(SpringUtil.class);
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		// ApplicationContext ac = new
 		// ClassPathXmlApplicationContext("spring.xml");
 		// System.out.println(ac);
 		startSpring();
+		startSpring();
+		
+		System.in.read();
 
-		SpringUtil.registZK("127.0.0.1:2181", "127.0.0.1:2181");
+		//SpringUtil.registZK("127.0.0.1:2181", "127.0.0.1:2181");
 
-		Map map = ac.getBeansOfType(RegistryConfig.class);
+		//Map map = ac.getBeansOfType(RegistryConfig.class);
 
 		/*for (Object obj : map.keySet()) {
 			unregisterBean((String) obj);
 		}*/
 
-		System.out.println(SpringUtil.getBean("127.0.0.1:2181"));
+		//System.out.println(SpringUtil.getBean("127.0.0.1:2181"));
 
 	}
 
@@ -46,6 +50,8 @@ public class SpringUtil {
 		ac = new ClassPathXmlApplicationContext("spring.xml");
 
 		beanFactory = (DefaultListableBeanFactory) ((ConfigurableApplicationContext) ac).getBeanFactory();
+		
+		System.out.println(beanFactory);
 
 		logger.info("spring∆Ù∂Ø≥…π¶!");
 

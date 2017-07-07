@@ -3,45 +3,48 @@ package com.dubbo.util;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
-import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import javax.swing.JPanel;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.alibaba.fastjson.serializer.ValueFilter;
+import com.client.ui.DubboUI;
+import com.client.ui.HttpUI;
 import com.client.ui.dubbo.DubboServiceEntity;
 import com.dubbo.entity.ServiceClass;
 import com.dubbo.entity.ServiceMethod;
 import com.dubbo.entity.ServiceParam;
+
+import groovy.lang.GroovyClassLoader;
 
 public class PackageUtil {
 
 	private static URLClassLoader myClassLoader;
 	
 	public static HashSet<Class> paramClassSet=new HashSet<>();
+	
+	public static Map<String,Map<String,Class>> jarContainer=new HashMap<>();
 
 	private final static Logger logger = LoggerFactory.getLogger(PackageUtil.class);
 
-	public static void main(String[] args) throws Exception {
+	public static void main2(String[] args) throws Exception {
 
 		String jarFilePath = "E:\\workspace\\test-facade\\target\\test-facade-0.0.1-SNAPSHOT.jar";
 
@@ -110,7 +113,7 @@ public class PackageUtil {
 	public static void loadDubboServiceFromJars(List<ServiceClass> serviceClassList, String[] jarFilePathArr,final TreeMap<Integer, DubboServiceEntity>  dubboServiceTreeMap)
 			throws Exception {
 		// List<Class> classList=loadJarFiles(jarFilePathArr);
-		List<Class> classList = loadJarFilesNew(jarFilePathArr);
+		List<Class> classList = loadJarFilesNew2(jarFilePathArr);
 
 		extractDubboServiceListByFilter(classList,serviceClassList, new ClassFilter() {
 
@@ -184,8 +187,14 @@ public class PackageUtil {
 				serviceParam.setParamName(chgPrimitiveType(paramTypes[j].getName()));
 				
 				try {
-					
-					serviceParam.setParamJsonContent(StringUtil.genJsonStrPrettyFormat(paramTypes[j].newInstance()));
+					if(Modifier.isAbstract(paramTypes[j].getModifiers())&&!paramTypes[j].isPrimitive()){
+						serviceParam.setParamJsonContent("{}");
+						serviceParam.setAbstract(true);
+						 Map<String,ServiceParam> childrenParamMap=getChildrenParamMap(paramTypes[j]);
+						serviceParam.setChildrenParamMap(childrenParamMap);
+					}else{
+						serviceParam.setParamJsonContent(StringUtil.genJsonStrPrettyFormat(paramTypes[j].newInstance()));
+					}
 					
 				} catch (Exception e) {
 					logger.error(e.getMessage());
@@ -202,6 +211,20 @@ public class PackageUtil {
 		
 		return serviceMethods;
 		
+	}
+
+	private static Map<String, ServiceParam> getChildrenParamMap(Class clazz) throws Exception {
+		Map<String, ServiceParam>  childrenParamMap=new HashMap<>();
+		List<Class> childClassList=getChildClassList(clazz);
+		
+		for(Class cls:childClassList){
+			ServiceParam serviceParam=new ServiceParam();
+			serviceParam.setParamName(chgPrimitiveType(cls.getName()));
+			serviceParam.setParamJsonContent(StringUtil.genJsonStrPrettyFormat(cls.newInstance()));
+			childrenParamMap.put(serviceParam.getParamName(), serviceParam);
+		}
+		
+		return childrenParamMap;
 	}
 
 	public static Set<Class> extractClassListByFilter(List<Class> clazzList, ClassFilter filter) {
@@ -367,6 +390,55 @@ public class PackageUtil {
 		}
 
 		return classList;
+	}
+	
+	public static List<Class> loadJarFilesNew2(String[] jarFilePathArr) throws Exception {
+		// "file:D:/jarload/test.jar"
+
+		List<Class> classList = new ArrayList<Class>();
+
+		List<String> classNameList = new ArrayList<String>();
+		
+		paramClassSet.clear();
+
+		for(String jarFilePath:jarFilePathArr){
+			loadJar(new File(jarFilePath), jarContainer);
+		}
+
+		for (String key : jarContainer.keySet()) {
+				
+				classList.addAll(jarContainer.get(key).values());
+				
+				paramClassSet.addAll(jarContainer.get(key).values());
+
+		}
+
+		return classList;
+	}
+	
+	
+	private static GroovyClassLoader loadJar(File jarFile,Map<String,Map<String,Class>> jarContainer) throws Exception{
+		
+		GroovyClassLoader classLoader=new GroovyClassLoader(Thread.currentThread().getContextClassLoader());
+		
+		
+		classLoader.addURL(jarFile.toURL());
+		
+		List<String> classNameList=getClassListByJarFile(jarFile.getAbsolutePath(),true);
+		
+		Map<String,Class> classMap=new HashMap<>();
+		
+		for(String className:classNameList){
+			
+			Class clazz=classLoader.loadClass(className);
+			
+			classMap.put(clazz.getName(), clazz);
+			
+		}
+		
+		jarContainer.put(jarFile.getAbsolutePath(), classMap);
+		
+		return classLoader;
 	}
 
 	public static List<Class> getClassListForJarFile(String jarFilePath, ClassFilter filter) throws Exception {
@@ -621,5 +693,47 @@ public class PackageUtil {
 		}
 		
 		return typeName;
+	}
+	
+	
+	public static List<Class> getChildClassList(Class parentClass){
+		
+		List<Class> childClassList=new ArrayList<>();
+		
+		for(Class childClass:paramClassSet){
+			
+			if(parentClass.isAssignableFrom(childClass)&&childClass!=parentClass) {//父子类关系
+				childClassList.add(childClass);
+			}
+			
+		}
+		
+		return childClassList;
+	}
+	
+	public static Class getClassFromClassSet(String className){
+		
+		
+		for(Class clazz:paramClassSet){
+			
+			if(clazz.getName().equals(className)) {//父子类关系
+				return clazz;
+			}
+			
+		}
+		
+		return null;
+		
+	}
+	
+	public static void main(String[] args) {
+		paramClassSet.add(DubboUI.class);
+		paramClassSet.add(HttpUI.class);
+		paramClassSet.add(String.class);
+		
+		List<Class> childClassList=getChildClassList(JPanel.class);
+		for(Class clazz:childClassList){
+			System.out.println(clazz.getName());
+		}
 	}
 }

@@ -1,10 +1,44 @@
 package com.dubbo.entity;
 
+import java.util.Map;
+
 public class ServiceParam {
 	
 	private String paramName;
 	
 	private String paramJsonContent;
+	
+	private boolean isAbstract=false;
+	
+	private Map<String,ServiceParam> childrenParamMap;
+	
+	private String realUsePramName;
+	
+	
+	
+	public String getRealUsePramName() {
+		return realUsePramName;
+	}
+
+	public void setRealUsePramName(String realUsePramName) {
+		this.realUsePramName = realUsePramName;
+	}
+
+	public boolean isAbstract() {
+		return isAbstract;
+	}
+
+	public void setAbstract(boolean isAbstract) {
+		this.isAbstract = isAbstract;
+	}
+
+	public Map<String, ServiceParam> getChildrenParamMap() {
+		return childrenParamMap;
+	}
+
+	public void setChildrenParamMap(Map<String, ServiceParam> childrenParamMap) {
+		this.childrenParamMap = childrenParamMap;
+	}
 
 	public String getParamName() {
 		return paramName;

@@ -11,11 +11,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
@@ -30,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dubbo.util.FileUtil;
-import com.dubbo.util.PropertiesUtil;
 
 public class MainUI {
 

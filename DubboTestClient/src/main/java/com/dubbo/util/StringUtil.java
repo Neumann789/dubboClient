@@ -79,6 +79,8 @@ public class StringUtil {
 					value =new ArrayList<>();
 				}else if(type ==  Map.class){
 					value =new HashMap<>();
+				}else if(type.isArray()){
+					value ="[{}]";
 				}else{
 					
 					try {
@@ -99,6 +101,91 @@ public class StringUtil {
 				return value;
 				
 		}}, SerializerFeature.PrettyFormat);
+	}
+	
+	
+	
+	public static String genJsonStrPrettyFormatNew(Class clazz,final Object instance){
+		
+		Map map=new HashMap<>();
+		
+		
+		
+		return JSON.toJSONString(instance, new ValueFilter() {
+			
+			public Object process(Object object, String name, Object value) {
+				
+				Method method=null;
+				Class  type=null;
+				if(value==null){
+				
+				try {
+					method=object.getClass().getMethod("get"+StringUtils.capitalize(name), null);
+					
+					type=method.getReturnType();
+					
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
+				
+				if(type == String.class){
+					value="";
+				}else if(type == Byte.class || 
+						 type ==  Character.class ||
+						 type ==  Short.class||
+						 type ==  Integer.class||
+						 type ==  Long.class){
+					value=0;
+					
+				}else if(type ==  Boolean.class){
+					
+					value = true;
+					
+				}else if(type ==  Float.class){
+					value = 0.0f;
+				}else if(type ==  Double.class){
+					value = 0.0;
+				}else if(type ==  Timestamp.class){
+					value = new Timestamp(new Date().getTime());
+				}else if(type ==  BigDecimal.class){
+					value =new BigDecimal(0);
+				}else if(type ==  List.class){
+					value =new ArrayList<>();
+				}else if(type ==  Map.class){
+					value =new HashMap<>();
+				}else if(type.isArray()){
+					value ="[{}]";
+				}else{
+					
+					try {
+						if(instance.getClass()==type){//如何对象中包含本身
+							value=new HashMap<>();
+						}else{
+							value=type.newInstance();
+						}
+						
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				
+				}
+			
+				return value;
+			}
+				return value;
+				
+		}}, SerializerFeature.PrettyFormat);
+	}
+	
+	public static Map chgInstance2Map(Class clazz,final Object instance){
+		Map map=new HashMap<>();
+		Method[] methods=clazz.getDeclaredMethods();
+		for(Method m:methods){
+			
+		}
+		
+		return null;
 	}
 	
 	

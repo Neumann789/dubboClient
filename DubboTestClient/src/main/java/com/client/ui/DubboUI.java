@@ -60,6 +60,7 @@ import com.dubbo.entity.ServiceMethod;
 import com.dubbo.entity.ServiceParam;
 import com.dubbo.util.ClassMatchUtil;
 import com.dubbo.util.ConfigUtil;
+import com.dubbo.util.DubboUtil;
 import com.dubbo.util.FileUtil;
 import com.dubbo.util.PackageUtil;
 import com.dubbo.util.SpringUtil;
@@ -94,10 +95,8 @@ public class DubboUI extends JPanel{
 	
 	private static JPanel jpDown=new JPanel();
 	
-	//dubbo服务下拉列表
 	private static JComboBox dubboServiceListComboBox=new JComboBox(); 
 	
-	//dubbo服务方法下拉列表
 	private static JComboBox dubboMethodsListComboBox=new JComboBox(); 
 	
 	//private static Box serviceParamListBox=Box.createVerticalBox();
@@ -106,7 +105,7 @@ public class DubboUI extends JPanel{
 	
 	private static JComboBox zkListComboBox=new JComboBox(); 
 	
-	private static JButton invokJButton=new JButton("调用接口");
+	private static JButton invokJButton=new JButton("执行");
 	
 	private static TextArea resultTextArea=new TextArea();
 	
@@ -118,7 +117,7 @@ public class DubboUI extends JPanel{
 	
 	private static TreeMap<Integer, DubboServiceEntity> dubboServiceTreeMap=new TreeMap<Integer, DubboServiceEntity>();
 	
-	private static String[] titles = {"编号","服务名", "服务类路径","开发人"};
+	private static String[] titles = {"编号","服务名", "规则","开发人"};
 	
 	private static String[] classParamTitles = {"类名"};
 	
@@ -128,7 +127,6 @@ public class DubboUI extends JPanel{
 		this.add(jpParamButtonAndContentList,BorderLayout.CENTER);
 		this.add(jpDown,BorderLayout.SOUTH);
 		initCompoment();
-		//初始化数据
 		initDataList();
 		
 		refresh();
@@ -137,17 +135,8 @@ public class DubboUI extends JPanel{
 	
 	private static void refresh(){
 		
-		
-		
-		
-		
-		//加载jar中的facade类
 		initJarFiles();
 		
-		//将服务类放注册到spring容器中去
-		registDubboConsumer();
-		
-		//刷新组件
 		refreshCompoments();
 		
 	}
@@ -184,17 +173,14 @@ public class DubboUI extends JPanel{
 		
 		refreshZkListComboBox(zkLineSet);
 		
-		//刷新dubbo规则配置
 		refreshDubboList();
 	}
 
 
 	private static void initDataList() {
 		
-		//刷新zk配置
 		refreshZkList();
 		
-		//刷新dubbo规则配置
 		refreshDubboList();
 	}
 	
@@ -239,7 +225,7 @@ public class DubboUI extends JPanel{
 			});
 			
 			if(jarFiles==null||jarFiles.length==0){
-				logger.error(PATH_DEFAULT+PATH_JAR+"下没有jar文件!");
+				logger.error(PATH_DEFAULT+PATH_JAR+"目录下没有jar!");
 				return ;
 			}
 			String[] jarFilePathArr=new String[jarFiles.length];
@@ -248,11 +234,11 @@ public class DubboUI extends JPanel{
 			}
 			try {
 				//PackageUtil.loadFacadeClassFromJars(serviceClassList, jarFilePathArr);
-				serviceClassList.clear();//清空服务集合
+				serviceClassList.clear();
 				PackageUtil.loadDubboServiceFromJars(serviceClassList, jarFilePathArr, dubboServiceTreeMap);
 				logger.info(jarFilePathArr+"加载成功!");
 			} catch (Exception e) {
-				logger.error(jarFilePathArr+"加载失败!失败原因:"+e.getMessage());
+				logger.error(jarFilePathArr+"加载失败:"+e.getMessage());
 			}
 			
 		}
@@ -283,10 +269,10 @@ public class DubboUI extends JPanel{
     	Box box4=Box.createHorizontalBox();
     	
 
-    	final JButton importJarJButton=new JButton("导入jar包");
+    	final JButton importJarJButton=new JButton("导入jar");
     	final JButton serviceRuleJButton=new JButton("规则设置");
-    	final JButton refreshJarJButton=new JButton("刷新服务");
-    	final JButton genJsonJButton=new JButton("JSON服务");
+    	final JButton refreshJarJButton=new JButton("刷新");
+    	final JButton genJsonJButton=new JButton("类搜索");
     	box0.add(importJarJButton);
     	box0.add(Box.createHorizontalStrut(20));
     	box0.add(serviceRuleJButton);
@@ -296,13 +282,11 @@ public class DubboUI extends JPanel{
     	box0.add(genJsonJButton);
 
     	
-    	//显示dubbo服务列表
-    	JLabel label=new JLabel("dubbo服务列表:");  
+    	JLabel label=new JLabel("服务:");  
     	box1.add(label); 
     	box1.add(dubboServiceListComboBox); 
     	
-    	//显示dubbo方法列表
-    	JLabel label2=new JLabel("dubbo方法列表:");  
+    	JLabel label2=new JLabel("方法:");  
     	box2.add(label2);  
     	box2.add(dubboMethodsListComboBox);  
     	
@@ -335,7 +319,7 @@ public class DubboUI extends JPanel{
     	jpParamButtonAndContentList.add(paramsBox);
     	
     	Box resultBox=Box.createVerticalBox();
-    	resultBox.add(new JLabel("响应结果:"));
+    	resultBox.add(new JLabel("结果:"));
     	resultTextArea.setEditable(false);
     	resultBox.add(resultTextArea);
     	jpDown.add(resultBox);
@@ -353,11 +337,10 @@ public class DubboUI extends JPanel{
 
 			private void openFileDialog(final JButton jb1) {
 				
-				JFileChooser filechooser = new JFileChooser();//创建文件选择器
-		        filechooser.setCurrentDirectory(new File(PATH_DEFAULT+PATH_JAR));//设置当前目录
+				JFileChooser filechooser = new JFileChooser();
+		        filechooser.setCurrentDirectory(new File(PATH_DEFAULT+PATH_JAR));
 		        filechooser.setAcceptAllFileFilterUsed(false);
 		        filechooser.setMultiSelectionEnabled(true);
-		        //显示所有文件
 		        filechooser.addChoosableFileFilter(new javax.swing.filechooser.FileFilter() {
 		            public boolean accept(File f) {
 		            	if(f.isDirectory()||f.getName().endsWith("jar")){
@@ -367,7 +350,7 @@ public class DubboUI extends JPanel{
 		            }
 
 		            public String getDescription() {
-		                return "所有文件(*.jar)";
+		                return "(*.jar)";
 		            }
 
 		        });
@@ -377,39 +360,24 @@ public class DubboUI extends JPanel{
 		        	String importResult="";
 		        	for(File file:filechooser.getSelectedFiles()){
 		        		try {
-			            	//移动jar包
 			            	String srcPath=PATH_DEFAULT+PATH_JAR+file.getName();
-			            	//String destPath=StringUtil.addFileStamp(srcPath);//添加时间戳
 			            	FileUtil.moveFile(file.getAbsolutePath(),srcPath );
 			            	//PackageUtil.loadFacadeClassFromJar(serviceClassList, destPath);
-			            	//unLoad();//卸载
-			            	//将服务类放注册到spring容器中去
 			        		//registDubboConsumer();
-			        		//初始化列表数据
 			        		//initDataList();
 			            	isImportSuc=true;;
-							//logger.info("jar包导入成功,若需生效需重启!");
 						} catch (Exception e) {
-							logger.error(filechooser.getSelectedFile().getAbsolutePath()+"jar失败,失败原因:"+e.getMessage());
-							e.printStackTrace();
+							logger.error(filechooser.getSelectedFile().getAbsolutePath()+"jar导入失败:"+e.getMessage(),e);
 							isImportSuc=false;
 						}
 		        	}
 		            
 		            
 		            if(isImportSuc){
-		            	JOptionPane.showMessageDialog(null, "jar包导入成功,刷新服务即可生效！", "提示", JOptionPane.INFORMATION_MESSAGE);
-		            	/*int res=JOptionPane.showConfirmDialog(null, "jar包导入成功,刷新服务即可生效！", "提示", JOptionPane.YES_NO_OPTION);
-		            	if(res==JOptionPane.YES_OPTION){ 
-		            		System.out.println("选择是后执行的代码");    //点击“是”后执行这个代码块
-		            		//restart();
-		            	}else{
-		            		 System.out.println("选择否后执行的代码");    //点击“否”后执行这个代码块
-		            	 
-		            	}*/ 
+		            	JOptionPane.showMessageDialog(null, "jar导入成功", "info", JOptionPane.INFORMATION_MESSAGE);
 		            }else{
 		            	
-		            	JOptionPane.showMessageDialog(null, "jar包导入失败！", "异常", JOptionPane.ERROR_MESSAGE);
+		            	JOptionPane.showMessageDialog(null, "jar失败", "error", JOptionPane.ERROR_MESSAGE);
 		            }
 
 		        }
@@ -431,7 +399,7 @@ public class DubboUI extends JPanel{
 			public void actionPerformed(ActionEvent e) {
 				
 				final JDialog jDialog=new JDialog();
-				jDialog.setTitle("JSON服务");
+				jDialog.setTitle("JSON");
 				JPanel  operateJPanel=new JPanel();
 				JScrollPane  listJPanel=new JScrollPane();
 				final JPanel  ruleContentJPanel=new JPanel();
@@ -441,12 +409,11 @@ public class DubboUI extends JPanel{
 				ruleContentJPanel.setVisible(false);
 				jDialog.setVisible(true);
 				jDialog.setSize(500, 500);
-		        jDialog.setLocationRelativeTo(null);//设置窗口居中
+		        jDialog.setLocationRelativeTo(null);
 		        
 		        
-		       // JButton addJButton=new JButton("添加");
 		        final JTextField classJtf=new JTextField(20);
-		        JButton classSearchJButton=new JButton("类搜索");
+		        JButton classSearchJButton=new JButton("搜索");
 		        final JLabel countJtf=new JLabel();
 		        //operateJPanel.add(addJButton);
 		        operateJPanel.add(classJtf);
@@ -485,7 +452,7 @@ public class DubboUI extends JPanel{
 				
 				
 				final JDialog jDialog=new JDialog();
-				jDialog.setTitle("配置服务规则");
+				jDialog.setTitle("规则设置");
 				JPanel  operateJPanel=new JPanel();
 				JScrollPane  listJPanel=new JScrollPane();
 				final JPanel  ruleContentJPanel=new JPanel();
@@ -495,10 +462,9 @@ public class DubboUI extends JPanel{
 				ruleContentJPanel.setVisible(false);
 				jDialog.setVisible(true);
 				jDialog.setSize(500, 500);
-		        jDialog.setLocationRelativeTo(null);//设置窗口居中
+		        jDialog.setLocationRelativeTo(null);
 		        
 		        
-		       // JButton addJButton=new JButton("添加");
 		        JButton modifyJButton=new JButton("修改");
 		        JButton saveJButton=new JButton("保存");
 		        //operateJPanel.add(addJButton);
@@ -514,15 +480,9 @@ public class DubboUI extends JPanel{
 		        	
 		        
 		        
-		        
-		        /*JButton closeJButton=new JButton("关闭");
-		        JButton saveJButton=new JButton("保存");
-		        closeOrSaveJPanel.add(closeJButton);
-		        closeOrSaveJPanel.add(saveJButton);*/
-		        
 		        final TextArea ruleContentArea=new TextArea();
 		    	Box ruleContentBox=Box.createVerticalBox();
-		    	ruleContentBox.add(new JLabel("服务配置文件展示："));
+		    	ruleContentBox.add(new JLabel("规则"));
 		    	ruleContentBox.add(ruleContentArea);
 		    	ruleContentJPanel.add(ruleContentBox);
 		        
@@ -639,6 +599,28 @@ public class DubboUI extends JPanel{
 					for(final ServiceParam sp:serviceParamList){
 						final JButton jb=new JButton(sp.getParamName()
 								.substring(sp.getParamName().lastIndexOf(".")+1));
+						final JComboBox childrenParamJComboBox=new JComboBox();
+						final TextArea paramTextArea=new TextArea(sp.getParamJsonContent());
+						if(sp.isAbstract()){
+							childrenParamJComboBox.addItem("---请选择---");
+							for(String key:sp.getChildrenParamMap().keySet()){
+								childrenParamJComboBox.addItem(key);
+							}
+
+						}
+						
+						childrenParamJComboBox.addActionListener(new ActionListener() {
+							
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								String key=childrenParamJComboBox.getSelectedItem().toString();
+								ServiceParam serviceParam=sp.getChildrenParamMap().get(key);
+								paramTextArea.setText(serviceParam.getParamJsonContent());
+								textAreaParamList.add(paramTextArea);
+								sp.setRealUsePramName(key);
+							}
+						});
+						
 						jb.addActionListener(new ActionListener() {
 							
 							public void actionPerformed(ActionEvent e) {
@@ -658,7 +640,10 @@ public class DubboUI extends JPanel{
 							}
 						});
 						jpParamButtonList.add(jb);
-						TextArea paramTextArea=new TextArea(sp.getParamJsonContent());
+						if(sp.isAbstract()){
+							jpParamButtonList.add(childrenParamJComboBox);
+						}
+						
 						textAreaParamList.add(paramTextArea);
 						
 						jpParamContentList.add(paramTextArea, sp.getParamName());
@@ -688,8 +673,15 @@ public class DubboUI extends JPanel{
 				Future<String> future=executor.submit(new Callable<String>() {
 					
 					public String call() throws Exception {
+						String result="";
+						try {
+							result=invokeService();
+						} catch (Exception e2) {
+							result="调用服务异常："+e2.getMessage();
+							logger.error("调用服务异常", e2);
+						}
 						
-						return invokeService();
+						return result;
 					}
 				});
 				
@@ -726,7 +718,7 @@ public class DubboUI extends JPanel{
 				refreshZkListComboBox(zkLineSet);
 				
 				//SpringUtil.unregistRegistryConfigs();
-				SpringUtil.registZK(address, address);
+				//SpringUtil.registZK(address, address);
 				
 				String className=dubboServiceListComboBox.getSelectedItem().toString();
 				
@@ -741,30 +733,25 @@ public class DubboUI extends JPanel{
 				Object[] parameter=new Object[serviceParamList.size()];
 				for(int i=0;i<serviceParamList.size();i++){
 					try {
-						parameterTypes[i]=getRealClass(serviceParamList.get(i).getParamName());
-						parameter[i]=JSON.parseObject(textAreaParamList.get(i).getText().trim(), parameterTypes[i]);
+						ServiceParam sp=serviceParamList.get(i);
+						parameterTypes[i]=getRealClass(sp.getParamName());
+						Class childrenClass=null;
+						if(sp.isAbstract()){
+							childrenClass=PackageUtil.getClassFromClassSet(sp.getRealUsePramName());
+						}else{
+							childrenClass=parameterTypes[i];
+						}
+						parameter[i]=JSON.parseObject(textAreaParamList.get(i).getText().trim(), childrenClass);
 					} catch (Exception e1) {
-						logger.error(e1.getMessage());
-						throw new RuntimeException("接口调用失败，失败原因:"+e1.getMessage());
+						throw new RuntimeException(e1);
 					}
 				}
 				
-				Object instance=SpringUtil.getBean(className.substring(className.lastIndexOf("--")+2,className.length()));
-				
-					
-					Method method=instance.getClass().getMethod(methodName, parameterTypes);
+				//Object instance=SpringUtil.getBean(className.substring(className.lastIndexOf("--")+2,className.length()));
+				Class clazz=PackageUtil.getClassFromClassSet(className.substring(className.lastIndexOf("--")+2,className.length()));
+				Object instance=DubboUtil.getDubboService(address, clazz);
+					Method method=clazz.getMethod(methodName, parameterTypes);
 					Object response=method.invoke(instance, parameter);
-					/*FutureTask futureTask=new FutureTask(new Callable() {
-					
-					public Object call() throws Exception {
-						
-						return method.invoke(instance, parameter);
-					}
-				});
-				
-				executors.submit(futureTask);
-				
-				Object response=futureTask.get();*/
 					
 					responseMsg=JSON.toJSONString(response);
 					logger.info("响应:"+JSON.toJSONString(response));
@@ -794,14 +781,20 @@ public class DubboUI extends JPanel{
     	}else if("boolean".equals(className)){
     		return boolean.class;
     	}else{
-    		return Class.forName(className);
+    		
+    		for(Class clazz:PackageUtil.paramClassSet){
+    			if(clazz.getName().equals(className)){
+    				return clazz;
+    			}
+    		}	
+    		
+    		return null;
     	}
     	
     }
     
     public static void unLoad(){
     	
-    	//卸载spring容器
     	SpringUtil.stopSpring();
     	
     	serviceClassList.clear();
@@ -819,14 +812,14 @@ public class DubboUI extends JPanel{
     	        try {
 //    	            String restartCmd = "nohup java -jar xxx.jar";
     	        	MainUI.main(null);
-    	            Thread.sleep(10000);//等10秒，保证分身启动完成后，再关掉自己
-    	            logger.info("程序重启完成！");
+    	            Thread.sleep(10000);
+    	            logger.info("重启成功");
     	        } catch (Exception e) {
-    	            logger.error("重启失败，原因：", e);
+    	            logger.error("重启失败", e);
     	        }
     	    }
     	});
-    	logger.info("程序准备重启！");
+    	logger.info("重启......");
     	System.exit(0);
     	
     }
@@ -836,7 +829,7 @@ public class DubboUI extends JPanel{
     	if(dubboServiceTreeMap.isEmpty()){
     		
     		return new Object[][]{
-    				{"0","service","*Service*","阿保"}
+    				{"0","service","*Service*","test"}
     		};
     		
     	}
@@ -887,7 +880,7 @@ private static Object[][] getColumnlistForParamClass(){
 		
 		HashSet<Class> resultSet=new HashSet<>();
 		
-		clazzRuleKey=clazzRuleKey.trim();//去除左右空格
+		clazzRuleKey=clazzRuleKey.trim();
 		
 		clazzRuleKey="*"+clazzRuleKey+"*";
 		
@@ -936,10 +929,9 @@ private static Object[][] getColumnlistForParamClass(){
 		    	@Override
 		    	public void mouseClicked(MouseEvent e) {
 		    		
-		    		if(e.getClickCount()==2){//双击
+		    		if(e.getClickCount()==2){
 		    			int row=jTable.rowAtPoint(e.getPoint());
 		    			String value=(String)jTable.getValueAt(row, 0);
-		    			//System.out.println("行号:"+row+" 内容为："+value);
 		    			String jsonStr="";
 		    			try {
 							jsonStr=StringUtil.genJsonStrPrettyFormat(Class.forName(value).newInstance());
@@ -962,8 +954,7 @@ private static Object[][] getColumnlistForParamClass(){
 		scrollPane.setVisible(true);
 		jDialog.setVisible(true);
 		jDialog.setSize(500, 500);
-        jDialog.setLocationRelativeTo(null);//设置窗口居中
-        
+        jDialog.setLocationRelativeTo(null);
         
         JTextArea jtaContext=new JTextArea(500, 500);
         jtaContext.setText(cntext);
@@ -973,9 +964,6 @@ private static Object[][] getColumnlistForParamClass(){
 }
 
 
-/**  
- *     注意：一般使用AbstractTableModel创建TableModel的实现，只有少量数据时使用DefaultTableModel，
- */
 class TableValues extends AbstractTableModel{
          private static final long serialVersionUID = -8430352919270533604L;
          public final static int NAME = 0;
@@ -1003,9 +991,6 @@ class TableValues extends AbstractTableModel{
          }
 
 
-         /**
-          * 获取列名
-          */
          public String getColumnName(int column){
                    return titles[column];
          }

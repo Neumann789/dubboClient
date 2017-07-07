@@ -2,6 +2,8 @@ package com.client.ui;
 
 import com.dubbo.util.ClassPathHacker;
 
+import groovy.lang.GroovyClassLoader;
+
 public class Test {
 
 	public static void main(String[] agr) {
@@ -22,10 +24,24 @@ public class Test {
 			e.printStackTrace();
 		}*/
 		
+		jarFilePath="D:\\dubboclient\\jars\\payment-front-yw-facade-1.0-SNAPSHOT.jar";
+		
+		
 		try {
 			ClassPathHacker.addFile(jarFilePath);
-			Class clazz=Class.forName("com.zb.payment.fmd.facade.FmdQueryFacade");
-			System.out.println(clazz.getName());
+			//Class clazz=Class.forName("com.zb.payment.front.facade.service.FrontService");
+			
+			GroovyClassLoader classLoader = new GroovyClassLoader(Thread.currentThread().getContextClassLoader());
+			
+			
+			Class clazz=Class.forName("com.zb.payment.front.facade.service.FrontService", true, classLoader);
+			System.out.println(clazz.hashCode());
+			Class clazz1=Class.forName("com.zb.payment.front.facade.service.FrontService", true, classLoader);
+			System.out.println(clazz1.hashCode());
+			jarFilePath="D:\\dubboclient\\payment-front-yw-facade-1.0-SNAPSHOT.jar";
+			ClassPathHacker.addFile(jarFilePath);
+			Class clazz2=Class.forName("com.zb.payment.front.facade.service.FrontService", true, classLoader);
+			System.out.println(clazz2.hashCode());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -61,7 +77,7 @@ public class Test {
 			}
 		}*/
 		
-		//System.setProperty("java.library.path","classpathÂ·¾¶");
+		//System.setProperty("java.library.path","classpathÂ·ï¿½ï¿½");
 /*		for(int i=0;i<10;i++){
 			new Thread(){
 				public void run() {

@@ -8,6 +8,9 @@
 	<properties>
 		<slf4j.version>1.7.21</slf4j.version>
 		<logback.version>1.1.7</logback.version>
+		<project.build.sourceEncoding>GBK</project.build.sourceEncoding>
+        <maven.compiler.encoding>GBK</maven.compiler.encoding>
+        <project.reporting.outputEncoding>GBK</project.reporting.outputEncoding>
 	</properties>
 
 	<dependencies>
@@ -16,6 +19,7 @@
 			<artifactId>dubbo</artifactId>
 			<version>2.5.3</version>
 		</dependency>
+		
 
 		<!-- 注册中心 -->
 		<dependency>
@@ -56,6 +60,18 @@
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
 			<version>1.1.41</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-all</artifactId>
+			<version>2.4.6</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.zb.payment.yw.mgw.facade</groupId>
+			<artifactId>payment-yw-mgw-facade</artifactId>
+			<version>1.0-SNAPSHOT</version>
 		</dependency>
 
 	</dependencies>
