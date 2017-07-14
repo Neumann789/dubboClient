@@ -1,25 +1,7 @@
 package com.dubbo.client.test;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import groovy.lang.GroovyClassLoader;
-
-public class TestLoadJar {
+public class TestLoadJar {/*
 	
-	private final static Logger logger = LoggerFactory.getLogger(TestLoadJar.class);
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -120,17 +102,17 @@ public class TestLoadJar {
 			
 			Thread.currentThread().sleep(5000);
 			
-			logger.info("每5秒检查一次!");
+			LoggerUtil.info("每5秒检查一次!");
 			
 			List<File>  jarFileList=listBaseFiles(basePath);
 			
 			for(File jarFile:jarFileList){
-				logger.info("加载jar:"+jarFile.getAbsolutePath());
+				LoggerUtil.info("加载jar:"+jarFile.getAbsolutePath());
 				loadJar(jarFile, jarContainer);
 				
 			}
 			
-			logger.info("当前容器已加载jar的数量是："+jarContainer.size());
+			LoggerUtil.info("当前容器已加载jar的数量是："+jarContainer.size());
 			
 			Map<String,Class> classMap=jarContainer.get(basePath+"\\dbframe-0.0.1-SNAPSHOT.jar");
 			
@@ -166,7 +148,7 @@ public class TestLoadJar {
 			
 			classMap.put(clazz.getName(), clazz);
 			
-			//logger.info(clazz+"==="+clazz.hashCode());
+			//LoggerUtil.info(clazz+"==="+clazz.hashCode());
 		
 		}
 		
@@ -194,7 +176,7 @@ public class TestLoadJar {
 		});
 		
 		for(File f:baseFiles){
-			logger.info(f.getAbsolutePath());
+			LoggerUtil.info(f.getAbsolutePath());
 			jarFileList.add(f);
 		}
 		
@@ -244,7 +226,7 @@ public class TestLoadJar {
 	
 	
 	
-	/**
+	*//**
 	 * 从jar获取某包下所有类
 	 * 
 	 * @param jarPath
@@ -252,7 +234,7 @@ public class TestLoadJar {
 	 * @param childPackage
 	 *            是否遍历子包
 	 * @return 类的完整名称
-	 */
+	 *//*
 	private static List<String> getClassListByJarFile(String jarFilePath, boolean childPackage) {
 		List<String> classList = new ArrayList<String>();
 		JarFile jarFile=null;
@@ -280,14 +262,14 @@ public class TestLoadJar {
 				}
 			}
 		} catch (Exception e) {
-			logger.error(e.getMessage(),e);
+			LoggerUtil.error(e.getMessage(),e);
 		}finally {
 			
 			if(jarFile!=null){
 				try {
 					jarFile.close();
 				} catch (IOException e) {
-					logger.error(e.getMessage(),e);
+					LoggerUtil.error(e.getMessage(),e);
 				}
 			}
 			
@@ -297,4 +279,4 @@ public class TestLoadJar {
 	
 	
 
-}
+*/}

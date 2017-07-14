@@ -1,23 +1,6 @@
 package com.dubbo.util;
 
-import java.io.IOException;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import com.alibaba.dubbo.common.utils.ConfigUtils;
-import com.alibaba.dubbo.config.RegistryConfig;
-import com.alibaba.dubbo.config.spring.ReferenceBean;
-
-public class SpringUtil {
+public class SpringUtil {/*
 
 	private static ApplicationContext ac;
 
@@ -38,9 +21,9 @@ public class SpringUtil {
 
 		//Map map = ac.getBeansOfType(RegistryConfig.class);
 
-		/*for (Object obj : map.keySet()) {
+		for (Object obj : map.keySet()) {
 			unregisterBean((String) obj);
-		}*/
+		}
 
 		//System.out.println(SpringUtil.getBean("127.0.0.1:2181"));
 
@@ -69,9 +52,9 @@ public class SpringUtil {
 
 		// beanFactory.setBeanClassLoader(Thread.currentThread().getContextClassLoader());
 
-		/*if (beanFactory.containsBean(beanName)) {// 如果bean工厂中bean已存在，则先销毁
+		if (beanFactory.containsBean(beanName)) {// 如果bean工厂中bean已存在，则先销毁
 			beanFactory.destroySingleton(beanName);
-		}*/
+		}
 
 		//ConfigUtils.getProperty("dubbo.registry.address");
 	//	ConfigUtils.
@@ -152,11 +135,11 @@ public class SpringUtil {
 		beanFactory.destroySingletons();
 	}
 
-	/**
+	*//**
 	 * 卸载bean
 	 * 
 	 * @param beanId
-	 */
+	 *//*
 	public static void unregisterBean(String beanId) {
 		beanFactory.removeBeanDefinition(beanId);
 	}
@@ -171,4 +154,4 @@ public class SpringUtil {
 		}
 	}
 
-}
+*/}

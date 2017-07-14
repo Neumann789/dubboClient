@@ -3,7 +3,6 @@ package com.dubbo.util;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,15 +12,11 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.client.comm.FHBException;
 
 
 public class FileUtil {
 	
-	private final static Logger logger = LoggerFactory.getLogger(FileUtil.class);
 
 	public static void moveFile(String srcPath,String destPath) {
 		
@@ -56,7 +51,7 @@ public class FileUtil {
 	            os.write(buf,0,temp);
 	        } 
 		} catch (Exception e) {
-			logger.error("移动文件失败:"+e.getMessage());
+			LoggerUtil.error("移动文件失败:"+e.getMessage());
 			throw new RuntimeException("移动文件失败:"+e.getMessage());
 		}finally {
 			try{
@@ -68,7 +63,7 @@ public class FileUtil {
 				}
             }
             catch(Exception e2){
-                logger.error("移动文件失败:"+e2.getMessage());
+                LoggerUtil.error("移动文件失败:"+e2.getMessage());
                 throw new RuntimeException("移动文件失败:"+e2.getMessage());
             }
 		}
@@ -94,7 +89,7 @@ public class FileUtil {
 				}
 			}
 		} catch (Exception e) {
-			logger.error("文件解析失败:"+e.getMessage());
+			LoggerUtil.error("文件解析失败:"+e.getMessage());
 			throw new FHBException("文件解析失败:"+e.getMessage());
 		}finally{
 			if(br!=null){

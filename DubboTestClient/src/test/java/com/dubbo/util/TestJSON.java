@@ -2,8 +2,6 @@ package com.dubbo.util;
 
 import java.lang.reflect.Method;
 
-import org.springframework.util.StringUtils;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.serializer.ValueFilter;
@@ -46,7 +44,7 @@ public class TestJSON {
 				}else{
 					
 					try {
-						Method method=object.getClass().getMethod("get"+StringUtils.capitalize(name), null);
+						Method method=object.getClass().getMethod("get"+StringUtil.capitalize(name), null);
 						
 						value=method.getReturnType().newInstance();
 					} catch (Exception e) {

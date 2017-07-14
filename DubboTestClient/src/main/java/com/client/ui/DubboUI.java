@@ -14,7 +14,6 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileFilter;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -46,12 +45,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.alibaba.dubbo.common.utils.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.client.MainUI;
 import com.client.ui.dubbo.DubboServiceEntity;
@@ -62,14 +56,13 @@ import com.dubbo.util.ClassMatchUtil;
 import com.dubbo.util.ConfigUtil;
 import com.dubbo.util.DubboUtil;
 import com.dubbo.util.FileUtil;
+import com.dubbo.util.LoggerUtil;
 import com.dubbo.util.PackageUtil;
-import com.dubbo.util.SpringUtil;
 import com.dubbo.util.StringUtil;
 
 @SuppressWarnings("all")
 public class DubboUI extends JPanel{
 
-	private final static Logger logger = LoggerFactory.getLogger(DubboUI.class); 
 	
 	private  static List<ServiceClass> serviceClassList=new ArrayList<ServiceClass>();
 	
@@ -143,16 +136,6 @@ public class DubboUI extends JPanel{
 
 
 
-	private static void registDubboConsumer() {
-		
-		SpringUtil.startSpring();
-		
-		for(ServiceClass serviceClass:serviceClassList){
-			
-			SpringUtil.registDubboConsumer(serviceClass.getClassName());
-			
-		}
-	}
 
 	
 	private static void refreshCompoments() {
@@ -167,7 +150,7 @@ public class DubboUI extends JPanel{
 		
 		for(ServiceClass serviceClass:serviceClassList){
 			
-			dubboServiceListComboBox.addItem(serviceClass.getOwnerName()+"--"+serviceClass.getClassName());
+			dubboServiceListComboBox.addItem(serviceClass.getClassName());
 			
 		}
 		
@@ -225,7 +208,7 @@ public class DubboUI extends JPanel{
 			});
 			
 			if(jarFiles==null||jarFiles.length==0){
-				logger.error(PATH_DEFAULT+PATH_JAR+"目录下没有jar!");
+				LoggerUtil.error(PATH_DEFAULT+PATH_JAR+"目录下没有jar!");
 				return ;
 			}
 			String[] jarFilePathArr=new String[jarFiles.length];
@@ -236,9 +219,9 @@ public class DubboUI extends JPanel{
 				//PackageUtil.loadFacadeClassFromJars(serviceClassList, jarFilePathArr);
 				serviceClassList.clear();
 				PackageUtil.loadDubboServiceFromJars(serviceClassList, jarFilePathArr, dubboServiceTreeMap);
-				logger.info(jarFilePathArr+"加载成功!");
+				LoggerUtil.info(jarFilePathArr+"加载成功!");
 			} catch (Exception e) {
-				logger.error(jarFilePathArr+"加载失败:"+e.getMessage());
+				LoggerUtil.error(jarFilePathArr+"加载失败:"+e.getMessage());
 			}
 			
 		}
@@ -290,7 +273,7 @@ public class DubboUI extends JPanel{
     	box2.add(label2);  
     	box2.add(dubboMethodsListComboBox);  
     	
-    	box3.add(new JLabel("zk地址:"));
+    	box3.add(new JLabel("dubbo地址:"));
     	zkListComboBox.setEditable(true);
     	box3.add(zkListComboBox);
     	
@@ -319,10 +302,29 @@ public class DubboUI extends JPanel{
     	jpParamButtonAndContentList.add(paramsBox);
     	
     	Box resultBox=Box.createVerticalBox();
-    	resultBox.add(new JLabel("结果:"));
+    	Box resultHoriBox=Box.createHorizontalBox();
+    	final JButton jsonFormatJButton=new JButton("格式化");
+    	resultHoriBox.add(new JLabel("结果:"));
+    	resultHoriBox.add(Box.createHorizontalStrut(300));
+    	resultHoriBox.add(jsonFormatJButton);
+    	resultBox.add(resultHoriBox);
     	resultTextArea.setEditable(false);
     	resultBox.add(resultTextArea);
     	jpDown.add(resultBox);
+    	
+    	
+    	jsonFormatJButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String resutText=resultTextArea.getText();
+				String[] resultArr=resutText.split("\r\n\r\n");
+				Map resultMap=JSON.parseObject(resultArr[1], Map.class);
+				resultArr[1]=JSON.toJSONString(resultMap, true);
+				resultTextArea.setText(resultArr[0]+"\r\n\r\n"+resultArr[1]);
+			}
+    		
+    	});
     	
     	
     	
@@ -367,7 +369,7 @@ public class DubboUI extends JPanel{
 			        		//initDataList();
 			            	isImportSuc=true;;
 						} catch (Exception e) {
-							logger.error(filechooser.getSelectedFile().getAbsolutePath()+"jar导入失败:"+e.getMessage(),e);
+							LoggerUtil.error(filechooser.getSelectedFile().getAbsolutePath()+"jar导入失败:"+e.getMessage(),e);
 							isImportSuc=false;
 						}
 		        	}
@@ -678,7 +680,7 @@ public class DubboUI extends JPanel{
 							result=invokeService();
 						} catch (Exception e2) {
 							result="调用服务异常："+e2.getMessage();
-							logger.error("调用服务异常", e2);
+							LoggerUtil.error("调用服务异常", e2);
 						}
 						
 						return result;
@@ -695,16 +697,16 @@ public class DubboUI extends JPanel{
 				catch (Exception exception) {
 					if(exception.getCause() instanceof InvocationTargetException){
 						Throwable t=((InvocationTargetException)exception.getCause()).getTargetException();
-						logger.error(t.getMessage(),t);
+						LoggerUtil.error(t.getMessage(),t);
 						responseMsg=t.getMessage();
 					}else{
-						logger.error(exception.getMessage(),e);
+						LoggerUtil.error(exception.getMessage(),exception);
 						responseMsg=exception.toString()+":"+exception.getMessage();
 					}
 					
 				}finally {
 					endTime=System.currentTimeMillis();
-					resultTextArea.setText(responseMsg+" 耗时："+(endTime-startTime)+"ms");
+					resultTextArea.setText("耗时："+(endTime-startTime)+"ms:\r\n\r\n"+responseMsg);
 				} 
 			}
 
@@ -717,8 +719,6 @@ public class DubboUI extends JPanel{
 				zkLineSet.add(address);
 				refreshZkListComboBox(zkLineSet);
 				
-				//SpringUtil.unregistRegistryConfigs();
-				//SpringUtil.registZK(address, address);
 				
 				String className=dubboServiceListComboBox.getSelectedItem().toString();
 				
@@ -728,35 +728,22 @@ public class DubboUI extends JPanel{
 				List<ServiceParam> serviceParamList=(List<ServiceParam>)methodParamMap.get(methodItemStr);
 				
 				
-				
-				Class[] parameterTypes=new Class[serviceParamList.size()];
-				Object[] parameter=new Object[serviceParamList.size()];
+				String params="";
 				for(int i=0;i<serviceParamList.size();i++){
-					try {
-						ServiceParam sp=serviceParamList.get(i);
-						parameterTypes[i]=getRealClass(sp.getParamName());
-						Class childrenClass=null;
-						if(sp.isAbstract()){
-							childrenClass=PackageUtil.getClassFromClassSet(sp.getRealUsePramName());
-						}else{
-							childrenClass=parameterTypes[i];
-						}
-						parameter[i]=JSON.parseObject(textAreaParamList.get(i).getText().trim(), childrenClass);
-					} catch (Exception e1) {
-						throw new RuntimeException(e1);
-					}
+					params=textAreaParamList.get(i).getText().trim()+",";
 				}
+				params=params.substring(0, params.length()-1);//去除最后一个逗号
 				
-				//Object instance=SpringUtil.getBean(className.substring(className.lastIndexOf("--")+2,className.length()));
-				Class clazz=PackageUtil.getClassFromClassSet(className.substring(className.lastIndexOf("--")+2,className.length()));
-				Object instance=DubboUtil.getDubboService(address, clazz);
-					Method method=clazz.getMethod(methodName, parameterTypes);
-					Object response=method.invoke(instance, parameter);
+				Map<String , String> map=new HashMap<>();
+				map.put("className", className);
+				map.put("methodName", methodName);
+				map.put("params", params);
+				
+				String response=DubboUtil.invokeDubbo(address, map);
+				
+				LoggerUtil.info("响应:"+JSON.toJSONString(response));
 					
-					responseMsg=JSON.toJSONString(response);
-					logger.info("响应:"+JSON.toJSONString(response));
-					
-					return responseMsg;
+				return response;
 			}
 		});
 		
@@ -795,8 +782,6 @@ public class DubboUI extends JPanel{
     
     public static void unLoad(){
     	
-    	SpringUtil.stopSpring();
-    	
     	serviceClassList.clear();
     	
     	dubboServiceListComboBox.removeAll();
@@ -813,13 +798,13 @@ public class DubboUI extends JPanel{
 //    	            String restartCmd = "nohup java -jar xxx.jar";
     	        	MainUI.main(null);
     	            Thread.sleep(10000);
-    	            logger.info("重启成功");
+    	            LoggerUtil.info("重启成功");
     	        } catch (Exception e) {
-    	            logger.error("重启失败", e);
+    	        	LoggerUtil.error("重启失败", e);
     	        }
     	    }
     	});
-    	logger.info("重启......");
+    	LoggerUtil.info("重启......");
     	System.exit(0);
     	
     }

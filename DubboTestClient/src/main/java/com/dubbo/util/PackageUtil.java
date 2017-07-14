@@ -22,17 +22,12 @@ import java.util.jar.JarFile;
 
 import javax.swing.JPanel;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.client.ui.DubboUI;
 import com.client.ui.HttpUI;
 import com.client.ui.dubbo.DubboServiceEntity;
 import com.dubbo.entity.ServiceClass;
 import com.dubbo.entity.ServiceMethod;
 import com.dubbo.entity.ServiceParam;
-
-import groovy.lang.GroovyClassLoader;
 
 public class PackageUtil {
 
@@ -41,8 +36,9 @@ public class PackageUtil {
 	public static HashSet<Class> paramClassSet=new HashSet<>();
 	
 	public static Map<String,Map<String,Class>> jarContainer=new HashMap<>();
+	
 
-	private final static Logger logger = LoggerFactory.getLogger(PackageUtil.class);
+
 
 	public static void main2(String[] args) throws Exception {
 
@@ -197,7 +193,7 @@ public class PackageUtil {
 					}
 					
 				} catch (Exception e) {
-					logger.error(e.getMessage());
+					LoggerUtil.error(e.getMessage());
 				} 
 				
 				serviceParams.add(serviceParam);
@@ -417,9 +413,9 @@ public class PackageUtil {
 	}
 	
 	
-	private static GroovyClassLoader loadJar(File jarFile,Map<String,Map<String,Class>> jarContainer) throws Exception{
+	private static ClassLoader loadJar(File jarFile,Map<String,Map<String,Class>> jarContainer) throws Exception{
 		
-		GroovyClassLoader classLoader=new GroovyClassLoader(Thread.currentThread().getContextClassLoader());
+		JarClassLoader classLoader=new JarClassLoader();
 		
 		
 		classLoader.addURL(jarFile.toURL());
@@ -650,14 +646,14 @@ public class PackageUtil {
 				}
 			}
 		} catch (Exception e) {
-			logger.error(e.getMessage(),e);
+			LoggerUtil.error(e.getMessage(),e);
 		}finally {
 			
 			if(jarFile!=null){
 				try {
 					jarFile.close();
 				} catch (IOException e) {
-					logger.error(e.getMessage(),e);
+					LoggerUtil.error(e.getMessage(),e);
 				}
 			}
 			

@@ -1,7 +1,6 @@
 package com.dubbo.util;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -10,8 +9,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.springframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
@@ -45,7 +42,7 @@ public class StringUtil {
 				if(value==null){
 				
 				try {
-					method=object.getClass().getMethod("get"+StringUtils.capitalize(name), null);
+					method=object.getClass().getMethod("get"+changeFirstCharacterCase(name,true), null);
 					
 					type=method.getReturnType();
 					
@@ -120,7 +117,7 @@ public class StringUtil {
 				if(value==null){
 				
 				try {
-					method=object.getClass().getMethod("get"+StringUtils.capitalize(name), null);
+					method=object.getClass().getMethod("get"+changeFirstCharacterCase(name,true), null);
 					
 					type=method.getReturnType();
 					
@@ -186,6 +183,25 @@ public class StringUtil {
 		}
 		
 		return null;
+	}
+	
+	public static String changeFirstCharacterCase(String str, boolean capitalize) {
+		if (str == null || str.length() == 0) {
+			return str;
+		}
+		StringBuilder sb = new StringBuilder(str.length());
+		if (capitalize) {
+			sb.append(Character.toUpperCase(str.charAt(0)));
+		}
+		else {
+			sb.append(Character.toLowerCase(str.charAt(0)));
+		}
+		sb.append(str.substring(1));
+		return sb.toString();
+	}
+	
+	public static String capitalize(String str) {
+		return changeFirstCharacterCase(str, true);
 	}
 	
 	

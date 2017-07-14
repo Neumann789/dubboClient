@@ -1,19 +1,15 @@
 package com.client.ui;
 
-import com.dubbo.util.ClassPathHacker;
-
-import groovy.lang.GroovyClassLoader;
-
 public class Test {
 
-	public static void main(String[] agr) {
+	public static void main(String[] agr) {/*
 		
 		//printTrigle(10);
 		//System.out.println(Thread.currentThread().getContextClassLoader());
 		//System.out.println(Test.class.getClassLoader());
 		String jarFilePath="D:\\dubbclient\\jars\\payment-fmd-facade-1.0-SNAPSHOT.jar";
 		
-/*		System.out.println(System.getProperty("java.class.path"));
+		System.out.println(System.getProperty("java.class.path"));
 		System.setProperty("java.class.path", jarFilePath+";"+System.getProperty("java.class.path"));
 		System.out.println(System.getProperty("java.class.path"));
 		
@@ -22,7 +18,7 @@ public class Test {
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}*/
+		}
 		
 		jarFilePath="D:\\dubboclient\\jars\\payment-front-yw-facade-1.0-SNAPSHOT.jar";
 		
@@ -52,7 +48,7 @@ public class Test {
 		//System.out.println("url==>> "+url);
 		
 		//System.out.println(System.getProperty("PATH"));
-/*		try {
+		try {
 			Runtime.getRuntime().exec("cmd set classpath="+"E:\\workspace\\DubboTestClient\\target\\classes");
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
@@ -75,10 +71,10 @@ public class Test {
 					e.printStackTrace();
 				} 
 			}
-		}*/
+		}
 		
 		//System.setProperty("java.library.path","classpath·��");
-/*		for(int i=0;i<10;i++){
+		for(int i=0;i<10;i++){
 			new Thread(){
 				public void run() {
 					
@@ -87,8 +83,8 @@ public class Test {
 				};
 			}.start();
 		}
-*/
-	}
+
+	*/}
 
 	public static void printTrigle(int n) {
 

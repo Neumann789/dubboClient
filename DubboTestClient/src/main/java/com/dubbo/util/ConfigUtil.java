@@ -3,21 +3,15 @@ package com.dubbo.util;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.client.comm.FHBException;
 import com.client.ui.dubbo.DubboServiceEntity;
 
 public class ConfigUtil {
 	
-	private final static Logger logger = LoggerFactory.getLogger(ConfigUtil.class); 
 	
 	public static Set<String> readFile(String filePath){
 		
@@ -44,7 +38,7 @@ public class ConfigUtil {
 			
 		} catch (Exception e) {
 			
-			logger.error(filePath+"文件读取失败，失败原因:"+e.getMessage());
+			LoggerUtil.error(filePath+"文件读取失败，失败原因:"+e.getMessage());
 		
 		}
 		
@@ -88,7 +82,7 @@ public class ConfigUtil {
 			
 		} catch (Exception e) {
 			
-			logger.error(filePath+"文件读取失败，失败原因:"+e.getMessage());
+			LoggerUtil.error(filePath+"文件读取失败，失败原因:"+e.getMessage());
 		
 		}
 		

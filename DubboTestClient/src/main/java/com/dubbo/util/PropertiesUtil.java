@@ -3,12 +3,8 @@ package com.dubbo.util;
 import java.util.Properties;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class PropertiesUtil {
 	
-	private final static Logger logger = LoggerFactory.getLogger(PropertiesUtil.class);
 	
 	public static Properties loadProperties(String configPath){
 		
@@ -19,7 +15,7 @@ public class PropertiesUtil {
 			
 //			System.out.println(PropertiesUtil.class.getResourceAsStream("").);
 		} catch (Exception e) {
-			logger.error("tabs.properties加载异常:"+e.getMessage());
+			LoggerUtil.error("tabs.properties加载异常:"+e.getMessage());
 		}
 		return pro;
 		

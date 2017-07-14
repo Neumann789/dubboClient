@@ -22,15 +22,12 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.dubbo.util.FileUtil;
+import com.dubbo.util.LoggerUtil;
 
 public class MainUI {
 
-	private final static Logger logger = LoggerFactory.getLogger(MainUI.class); 
-	
 	public final static String TAGS_CONFIG="/tabs.properties";
 	
 	private static JPanel jpUp=new JPanel();
@@ -215,7 +212,7 @@ public class MainUI {
 				});
 				
 			} catch (Exception e) {
-				logger.error("ui配置有问题:"+e.getMessage());
+				LoggerUtil.error("ui配置有问题:"+e.getMessage());
 			}
 	    	
 			
