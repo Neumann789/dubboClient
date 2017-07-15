@@ -100,7 +100,7 @@ public class DubboUI extends JPanel{
 	
 	private static JComboBox zkListComboBox=new JComboBox(); 
 	
-	private static JButton invokJButton=new JButton("Ö´ĞĞ");
+	private static JButton invokJButton=new JButton("æ‰§è¡Œ");
 	
 	private static TextArea resultTextArea=new TextArea();
 	
@@ -112,9 +112,9 @@ public class DubboUI extends JPanel{
 	
 	private static TreeMap<Integer, DubboServiceEntity> dubboServiceTreeMap=new TreeMap<Integer, DubboServiceEntity>();
 	
-	private static String[] titles = {"±àºÅ","·şÎñÃû", "¹æÔò","¿ª·¢ÈË"};
+	private static String[] titles = {"ç¼–å·","æœåŠ¡å", "è§„åˆ™","å¼€å‘äºº"};
 	
-	private static String[] classParamTitles = {"ÀàÃû"};
+	private static String[] classParamTitles = {"ç±»å"};
 	
 	public DubboUI() {
 		this.setLayout(new BorderLayout());
@@ -146,9 +146,9 @@ public class DubboUI extends JPanel{
 		
 		dubboMethodsListComboBox.removeAllItems();
 		
-		dubboServiceListComboBox.addItem("---ÇëÑ¡Ôñ---");
+		dubboServiceListComboBox.addItem("---è¯·é€‰æ‹©---");
 		
-		dubboMethodsListComboBox.addItem("---ÇëÑ¡Ôñ---");
+		dubboMethodsListComboBox.addItem("---è¯·é€‰æ‹©---");
 		
 		for(ServiceClass serviceClass:serviceClassList){
 			
@@ -210,7 +210,7 @@ public class DubboUI extends JPanel{
 			});
 			
 			if(jarFiles==null||jarFiles.length==0){
-				LoggerUtil.error(PATH_DEFAULT+PATH_JAR+"Ä¿Â¼ÏÂÃ»ÓĞjar!");
+				LoggerUtil.error(PATH_DEFAULT+PATH_JAR+"ç›®å½•ä¸‹æ²¡æœ‰jar!");
 				return ;
 			}
 			String[] jarFilePathArr=new String[jarFiles.length];
@@ -221,9 +221,9 @@ public class DubboUI extends JPanel{
 				//PackageUtil.loadFacadeClassFromJars(serviceClassList, jarFilePathArr);
 				serviceClassList.clear();
 				PackageUtil.loadDubboServiceFromJars(serviceClassList, jarFilePathArr, dubboServiceTreeMap);
-				LoggerUtil.info(jarFilePathArr+"¼ÓÔØ³É¹¦!");
+				LoggerUtil.info(jarFilePathArr+"åŠ è½½æˆåŠŸ!");
 			} catch (Exception e) {
-				LoggerUtil.error(jarFilePathArr+"¼ÓÔØÊ§°Ü:"+e.getMessage());
+				LoggerUtil.error(jarFilePathArr+"åŠ è½½å¤±è´¥:"+e.getMessage());
 			}
 			
 		}
@@ -235,15 +235,15 @@ public class DubboUI extends JPanel{
     	dubboServiceListComboBox.setBackground(Color.LIGHT_GRAY);
     	dubboServiceListComboBox.setEditable(true);
     	dubboServiceListComboBox.setPreferredSize(new Dimension(400, 20));
-    	dubboServiceListComboBox.addItem("---ÇëÑ¡Ôñ---");
+    	dubboServiceListComboBox.addItem("---è¯·é€‰æ‹©---");
     	
     	dubboMethodsListComboBox.setBackground(Color.LIGHT_GRAY);
     	dubboMethodsListComboBox.setPreferredSize(new Dimension(400, 20));
-    	dubboMethodsListComboBox.addItem("---ÇëÑ¡Ôñ---");
+    	dubboMethodsListComboBox.addItem("---è¯·é€‰æ‹©---");
     	
     	zkListComboBox.setBackground(Color.ORANGE);
     	zkListComboBox.setPreferredSize(new Dimension(400, 20));
-    	zkListComboBox.addItem("---ÇëÑ¡Ôñ---");
+    	zkListComboBox.addItem("---è¯·é€‰æ‹©---");
     	
     	
     	
@@ -255,10 +255,10 @@ public class DubboUI extends JPanel{
     	Box box4=Box.createHorizontalBox();
     	
 
-    	final JButton importJarJButton=new JButton("µ¼Èëjar");
-    	final JButton serviceRuleJButton=new JButton("¹æÔòÉèÖÃ");
-    	final JButton refreshJarJButton=new JButton("Ë¢ĞÂ");
-    	final JButton genJsonJButton=new JButton("ÀàËÑË÷");
+    	final JButton importJarJButton=new JButton("å¯¼å…¥jar");
+    	final JButton serviceRuleJButton=new JButton("è§„åˆ™è®¾ç½®");
+    	final JButton refreshJarJButton=new JButton("åˆ·æ–°");
+    	final JButton genJsonJButton=new JButton("ç±»æœç´¢");
     	box0.add(importJarJButton);
     	box0.add(Box.createHorizontalStrut(20));
     	box0.add(serviceRuleJButton);
@@ -268,15 +268,15 @@ public class DubboUI extends JPanel{
     	box0.add(genJsonJButton);
 
     	
-    	JLabel label=new JLabel("·şÎñ:");  
+    	JLabel label=new JLabel("æœåŠ¡:");  
     	box1.add(label); 
     	box1.add(dubboServiceListComboBox); 
     	
-    	JLabel label2=new JLabel("·½·¨:");  
+    	JLabel label2=new JLabel("æ–¹æ³•:");  
     	box2.add(label2);  
     	box2.add(dubboMethodsListComboBox);  
     	
-    	box3.add(new JLabel("zkµØÖ·:"));
+    	box3.add(new JLabel("zkåœ°å€:"));
     	zkListComboBox.setEditable(true);
     	box3.add(zkListComboBox);
     	
@@ -306,8 +306,8 @@ public class DubboUI extends JPanel{
     	
     	Box resultBox=Box.createVerticalBox();
     	Box resultHoriBox=Box.createHorizontalBox();
-    	final JButton jsonFormatJButton=new JButton("¸ñÊ½»¯");
-    	resultHoriBox.add(new JLabel("½á¹û:"));
+    	final JButton jsonFormatJButton=new JButton("æ ¼å¼åŒ–");
+    	resultHoriBox.add(new JLabel("ç»“æœ:"));
     	resultHoriBox.add(Box.createHorizontalStrut(300));
     	resultHoriBox.add(jsonFormatJButton);
     	resultBox.add(resultHoriBox);
@@ -372,17 +372,17 @@ public class DubboUI extends JPanel{
 			        		//initDataList();
 			            	isImportSuc=true;;
 						} catch (Exception e) {
-							LoggerUtil.error(filechooser.getSelectedFile().getAbsolutePath()+"jarµ¼ÈëÊ§°Ü:"+e.getMessage(),e);
+							LoggerUtil.error(filechooser.getSelectedFile().getAbsolutePath()+"jarå¯¼å…¥å¤±è´¥:"+e.getMessage(),e);
 							isImportSuc=false;
 						}
 		        	}
 		            
 		            
 		            if(isImportSuc){
-		            	JOptionPane.showMessageDialog(null, "jarµ¼Èë³É¹¦", "info", JOptionPane.INFORMATION_MESSAGE);
+		            	JOptionPane.showMessageDialog(null, "jarå¯¼å…¥æˆåŠŸ", "info", JOptionPane.INFORMATION_MESSAGE);
 		            }else{
 		            	
-		            	JOptionPane.showMessageDialog(null, "jarÊ§°Ü", "error", JOptionPane.ERROR_MESSAGE);
+		            	JOptionPane.showMessageDialog(null, "jarå¤±è´¥", "error", JOptionPane.ERROR_MESSAGE);
 		            }
 
 		        }
@@ -418,7 +418,7 @@ public class DubboUI extends JPanel{
 		        
 		        
 		        final JTextField classJtf=new JTextField(20);
-		        JButton classSearchJButton=new JButton("ËÑË÷");
+		        JButton classSearchJButton=new JButton("æœç´¢");
 		        final JLabel countJtf=new JLabel();
 		        //operateJPanel.add(addJButton);
 		        operateJPanel.add(classJtf);
@@ -457,7 +457,7 @@ public class DubboUI extends JPanel{
 				
 				
 				final JDialog jDialog=new JDialog();
-				jDialog.setTitle("¹æÔòÉèÖÃ");
+				jDialog.setTitle("è§„åˆ™è®¾ç½®");
 				JPanel  operateJPanel=new JPanel();
 				JScrollPane  listJPanel=new JScrollPane();
 				final JPanel  ruleContentJPanel=new JPanel();
@@ -470,8 +470,8 @@ public class DubboUI extends JPanel{
 		        jDialog.setLocationRelativeTo(null);
 		        
 		        
-		        JButton modifyJButton=new JButton("ĞŞ¸Ä");
-		        JButton saveJButton=new JButton("±£´æ");
+		        JButton modifyJButton=new JButton("ä¿®æ”¹");
+		        JButton saveJButton=new JButton("ä¿å­˜");
 		        //operateJPanel.add(addJButton);
 		        operateJPanel.add(modifyJButton);
 		        operateJPanel.add(saveJButton);
@@ -487,7 +487,7 @@ public class DubboUI extends JPanel{
 		        
 		        final TextArea ruleContentArea=new TextArea();
 		    	Box ruleContentBox=Box.createVerticalBox();
-		    	ruleContentBox.add(new JLabel("¹æÔò"));
+		    	ruleContentBox.add(new JLabel("è§„åˆ™"));
 		    	ruleContentBox.add(ruleContentArea);
 		    	ruleContentJPanel.add(ruleContentBox);
 		        
@@ -562,7 +562,7 @@ public class DubboUI extends JPanel{
 						List<ServiceMethod> serviceMethodList=serviceClass.getServiceMethods();
 						
 						dubboMethodsListComboBox.removeAllItems();
-						dubboMethodsListComboBox.addItem("---ÇëÑ¡Ôñ---");
+						dubboMethodsListComboBox.addItem("---è¯·é€‰æ‹©---");
 						for(ServiceMethod sm:serviceMethodList){
 							List<ServiceParam> serviceParamList=sm.getServiceParams();
 							String serviceParamListStr="";
@@ -607,7 +607,7 @@ public class DubboUI extends JPanel{
 						final JComboBox childrenParamJComboBox=new JComboBox();
 						final TextArea paramTextArea=new TextArea(sp.getParamJsonContent());
 						if(sp.isAbstract()){
-							childrenParamJComboBox.addItem("---ÇëÑ¡Ôñ---");
+							childrenParamJComboBox.addItem("---è¯·é€‰æ‹©---");
 							for(String key:sp.getChildrenParamMap().keySet()){
 								childrenParamJComboBox.addItem(key);
 							}
@@ -682,8 +682,8 @@ public class DubboUI extends JPanel{
 						try {
 							result=invokeService();
 						} catch (Exception e2) {
-							result="µ÷ÓÃ·şÎñÒì³££º"+e2.getMessage();
-							LoggerUtil.error("µ÷ÓÃ·şÎñÒì³£", e2);
+							result="è°ƒç”¨æœåŠ¡å¼‚å¸¸ï¼š"+e2.getMessage();
+							LoggerUtil.error("è°ƒç”¨æœåŠ¡å¼‚å¸¸", e2);
 						}
 						
 						return result;
@@ -709,7 +709,7 @@ public class DubboUI extends JPanel{
 					
 				}finally {
 					endTime=System.currentTimeMillis();
-					resultTextArea.setText("ºÄÊ±£º"+(endTime-startTime)+"ms:\r\n\r\n"+responseMsg);
+					resultTextArea.setText("è€—æ—¶ï¼š"+(endTime-startTime)+"ms:\r\n\r\n"+responseMsg);
 				} 
 			}
 
@@ -736,14 +736,14 @@ public class DubboUI extends JPanel{
 				List<String> dubboConnectList=ZKUtil.getDubboServiceInfoList(className);
 				
 				if(dubboConnectList==null||dubboConnectList.size()==0){
-					throw new FHBException("dubbo·şÎñÔÚ´ËZKÉÏ²»´æÔÚ!");
+					throw new FHBException("dubboæœåŠ¡åœ¨æ­¤ZKä¸Šä¸å­˜åœ¨!");
 				}
 				
 				String params="";
 				for(int i=0;i<serviceParamList.size();i++){
 					params=textAreaParamList.get(i).getText().trim()+",";
 				}
-				params=params.substring(0, params.length()-1);//È¥³ı×îºóÒ»¸ö¶ººÅ
+				params=params.substring(0, params.length()-1);//å»é™¤æœ€åä¸€ä¸ªé€—å·
 				
 				Map<String , String> map=new HashMap<>();
 				map.put("className", className);
@@ -752,7 +752,7 @@ public class DubboUI extends JPanel{
 				
 				String response=DubboUtil.invokeDubbo(dubboConnectList.get(0), map);
 				
-				LoggerUtil.info("ÏìÓ¦:"+JSON.toJSONString(response));
+				LoggerUtil.info("å“åº”:"+JSON.toJSONString(response));
 					
 				return response;
 			}
@@ -809,13 +809,13 @@ public class DubboUI extends JPanel{
 //    	            String restartCmd = "nohup java -jar xxx.jar";
     	        	MainUI.main(null);
     	            Thread.sleep(10000);
-    	            LoggerUtil.info("ÖØÆô³É¹¦");
+    	            LoggerUtil.info("é‡å¯æˆåŠŸ");
     	        } catch (Exception e) {
-    	        	LoggerUtil.error("ÖØÆôÊ§°Ü", e);
+    	        	LoggerUtil.error("é‡å¯å¤±è´¥", e);
     	        }
     	    }
     	});
-    	LoggerUtil.info("ÖØÆô......");
+    	LoggerUtil.info("é‡å¯......");
     	System.exit(0);
     	
     }
@@ -943,7 +943,7 @@ private static Object[][] getColumnlistForParamClass(){
     
     public static void showMsg(String cntext){
     	final JDialog jDialog=new JDialog();
-		jDialog.setTitle("ĞÅÏ¢");
+		jDialog.setTitle("ä¿¡æ¯");
 		final JPanel  contentJPanel=new JPanel();
 		JScrollPane  scrollPane=new JScrollPane(contentJPanel);
 		jDialog.add(scrollPane ,BorderLayout.CENTER);

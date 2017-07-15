@@ -1,9 +1,5 @@
 package com.client.ui.dubbo;
-/**
- * dubbo ·şÎñÀà
- * @author Administrator
- *
- */
+
 public class DubboServiceEntity {
 	
 	private String id;

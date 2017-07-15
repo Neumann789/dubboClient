@@ -39,28 +39,28 @@ public class MainUI {
 	private static JToolBar jtb=new JToolBar();
 	
 	 /**{
-     * ´´½¨²¢ÏÔÊ¾GUI¡£³öÓÚÏß³Ì°²È«µÄ¿¼ÂÇ£¬
-     * Õâ¸ö·½·¨ÔÚÊÂ¼şµ÷ÓÃÏß³ÌÖĞµ÷ÓÃ¡£
+     * åˆ›å»ºå¹¶æ˜¾ç¤ºGUIã€‚å‡ºäºçº¿ç¨‹å®‰å…¨çš„è€ƒè™‘ï¼Œ
+     * è¿™ä¸ªæ–¹æ³•åœ¨äº‹ä»¶è°ƒç”¨çº¿ç¨‹ä¸­è°ƒç”¨ã€‚
      */
     private static void createAndShowGUI() {
-        // È·±£Ò»¸öÆ¯ÁÁµÄÍâ¹Û·ç¸ñ
+        // ç¡®ä¿ä¸€ä¸ªæ¼‚äº®çš„å¤–è§‚é£æ ¼
 
-        // ´´½¨¼°ÉèÖÃ´°¿Ú
-        JFrame frame = new JFrame("°®ÎÊ");
+        // åˆ›å»ºåŠè®¾ç½®çª—å£
+        JFrame frame = new JFrame("çˆ±é—®");
        // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Ìí¼Ó "Hello World" ±êÇ©
+        // æ·»åŠ  "Hello World" æ ‡ç­¾
 //        JLabel label = new JLabel("Hello World");
 //        frame.getContentPane().add(label);
         
         fillContent(frame);
         
 
-        // ÏÔÊ¾´°¿Ú
+        // æ˜¾ç¤ºçª—å£
         frame.pack();
         frame.setVisible(true);
         frame.setSize(800, 800);
-        frame.setLocationRelativeTo(null);//ÉèÖÃ´°¿Ú¾ÓÖĞ
+        frame.setLocationRelativeTo(null);//è®¾ç½®çª—å£å±…ä¸­
         frame.setResizable(false);
         
         
@@ -72,7 +72,7 @@ public class MainUI {
 			e.printStackTrace();
 		}
         
-        //Ìí¼Ó´°¿Ú¹Ø±ÕÊÂ¼ş
+        //æ·»åŠ çª—å£å…³é—­äº‹ä»¶
         frame.addWindowListener(new WindowAdapter() {
         	
         	@Override
@@ -112,12 +112,12 @@ public class MainUI {
     	frame.setJMenuBar(jmb);
     	
     	
-    	JMenu jmMenu=new JMenu("²Ëµ¥");
-    	JMenu jmView=new JMenu("ÊÓÍ¼");
-    	JMenu jmNavi=new JMenu("µ¼º½");
-    	JMenu jmSet=new JMenu("ÉèÖÃ");
-    	JMenu jmHelp=new JMenu("°ïÖú");
-    	JMenu jmAbout=new JMenu("¹ØÓÚ");
+    	JMenu jmMenu=new JMenu("èœå•");
+    	JMenu jmView=new JMenu("è§†å›¾");
+    	JMenu jmNavi=new JMenu("å¯¼èˆª");
+    	JMenu jmSet=new JMenu("è®¾ç½®");
+    	JMenu jmHelp=new JMenu("å¸®åŠ©");
+    	JMenu jmAbout=new JMenu("å…³äº");
     	
     	jmb.add(jmMenu);
     	jmb.add(jmView);
@@ -126,38 +126,38 @@ public class MainUI {
     	jmb.add(jmHelp);
     	jmb.add(jmAbout);
     	
-    	JMenuItem jmiMenu1=new JMenuItem("×Ó²Ëµ¥1");
-    	JMenuItem jmiMenu2=new JMenuItem("×Ó²Ëµ¥2");
+    	JMenuItem jmiMenu1=new JMenuItem("å­èœå•1");
+    	JMenuItem jmiMenu2=new JMenuItem("å­èœå•2");
     	jmMenu.add(jmiMenu1);
     	jmMenu.addSeparator();
     	jmMenu.add(jmiMenu2);
     	
-    	JMenuItem jmiView1=new JMenuItem("×ÓÊÓÍ¼1");
-    	JMenuItem jmiView2=new JMenuItem("×ÓÊÓÍ¼2");
+    	JMenuItem jmiView1=new JMenuItem("å­è§†å›¾1");
+    	JMenuItem jmiView2=new JMenuItem("å­è§†å›¾2");
     	jmView.add(jmiView1);
     	jmView.addSeparator();
     	jmView.add(jmiView2);
     	
-    	JMenuItem jmiNavi1=new JMenuItem("×Óµ¼º½1");
-    	JMenuItem jmiNavi2=new JMenuItem("×Óµ¼º½2");
+    	JMenuItem jmiNavi1=new JMenuItem("å­å¯¼èˆª1");
+    	JMenuItem jmiNavi2=new JMenuItem("å­å¯¼èˆª2");
     	jmNavi.add(jmiNavi1);
     	jmNavi.addSeparator();
     	jmNavi.add(jmiNavi2);
     	
-    	JMenuItem jmiSet1=new JMenuItem("×ÓÉèÖÃ1");
-    	JMenuItem jmiSet2=new JMenuItem("×ÓÉèÖÃ2");
+    	JMenuItem jmiSet1=new JMenuItem("å­è®¾ç½®1");
+    	JMenuItem jmiSet2=new JMenuItem("å­è®¾ç½®2");
     	jmSet.add(jmiSet1);
     	jmSet.addSeparator();
     	jmSet.add(jmiSet2);
     	
-    	JMenuItem jmiHelp1=new JMenuItem("×Ó°ïÖú1");
-    	JMenuItem jmiHelp2=new JMenuItem("×Ó°ïÖú2");
+    	JMenuItem jmiHelp1=new JMenuItem("å­å¸®åŠ©1");
+    	JMenuItem jmiHelp2=new JMenuItem("å­å¸®åŠ©2");
     	jmHelp.add(jmiHelp1);
     	jmHelp.addSeparator();
     	jmHelp.add(jmiHelp2);
     	
-    	JMenuItem jmiAbout1=new JMenuItem("×Ó¹ØÓÚ1");
-    	JMenuItem jmiAbout2=new JMenuItem("×Ó¹ØÓÚ2");
+    	JMenuItem jmiAbout1=new JMenuItem("å­å…³äº1");
+    	JMenuItem jmiAbout2=new JMenuItem("å­å…³äº2");
     	jmAbout.add(jmiAbout1);
     	jmAbout.addSeparator();
     	jmAbout.add(jmiAbout2);
@@ -212,12 +212,12 @@ public class MainUI {
 				});
 				
 			} catch (Exception e) {
-				LoggerUtil.error("uiÅäÖÃÓĞÎÊÌâ:"+e.getMessage());
+				LoggerUtil.error("uié…ç½®æœ‰é—®é¢˜:"+e.getMessage());
 			}
 	    	
 			
 			
-			if(i==0){//Ä¬ÈÏÑ¡ÔñµÚÒ»¸ö°´Å¥
+			if(i==0){//é»˜è®¤é€‰æ‹©ç¬¬ä¸€ä¸ªæŒ‰é’®
 				jb.doClick();
 			}
 			i++;
@@ -230,7 +230,7 @@ public class MainUI {
 
 	public static void main(String[] args) {
 		
-        // ÏÔÊ¾Ó¦ÓÃ GUI
+        // æ˜¾ç¤ºåº”ç”¨ GUI
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 createAndShowGUI();
