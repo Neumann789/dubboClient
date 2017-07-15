@@ -48,6 +48,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import com.alibaba.fastjson.JSON;
 import com.client.MainUI;
+import com.client.comm.FHBException;
 import com.client.ui.dubbo.DubboServiceEntity;
 import com.dubbo.entity.ServiceClass;
 import com.dubbo.entity.ServiceMethod;
@@ -59,6 +60,7 @@ import com.dubbo.util.FileUtil;
 import com.dubbo.util.LoggerUtil;
 import com.dubbo.util.PackageUtil;
 import com.dubbo.util.StringUtil;
+import com.dubbo.util.ZKUtil;
 
 @SuppressWarnings("all")
 public class DubboUI extends JPanel{
@@ -231,6 +233,7 @@ public class DubboUI extends JPanel{
     private static void initCompoment() {
     	
     	dubboServiceListComboBox.setBackground(Color.LIGHT_GRAY);
+    	dubboServiceListComboBox.setEditable(true);
     	dubboServiceListComboBox.setPreferredSize(new Dimension(400, 20));
     	dubboServiceListComboBox.addItem("---请选择---");
     	
@@ -273,7 +276,7 @@ public class DubboUI extends JPanel{
     	box2.add(label2);  
     	box2.add(dubboMethodsListComboBox);  
     	
-    	box3.add(new JLabel("dubbo地址:"));
+    	box3.add(new JLabel("zk地址:"));
     	zkListComboBox.setEditable(true);
     	box3.add(zkListComboBox);
     	
@@ -720,6 +723,8 @@ public class DubboUI extends JPanel{
 				refreshZkListComboBox(zkLineSet);
 				
 				
+				
+				
 				String className=dubboServiceListComboBox.getSelectedItem().toString();
 				
 				String methodItemStr=dubboMethodsListComboBox.getSelectedItem().toString();
@@ -727,6 +732,12 @@ public class DubboUI extends JPanel{
 				
 				List<ServiceParam> serviceParamList=(List<ServiceParam>)methodParamMap.get(methodItemStr);
 				
+				ZKUtil.connectZK(address);
+				List<String> dubboConnectList=ZKUtil.getDubboServiceInfoList(className);
+				
+				if(dubboConnectList==null||dubboConnectList.size()==0){
+					throw new FHBException("dubbo服务在此ZK上不存在!");
+				}
 				
 				String params="";
 				for(int i=0;i<serviceParamList.size();i++){
@@ -739,7 +750,7 @@ public class DubboUI extends JPanel{
 				map.put("methodName", methodName);
 				map.put("params", params);
 				
-				String response=DubboUtil.invokeDubbo(address, map);
+				String response=DubboUtil.invokeDubbo(dubboConnectList.get(0), map);
 				
 				LoggerUtil.info("响应:"+JSON.toJSONString(response));
 					
