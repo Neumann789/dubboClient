@@ -54,6 +54,7 @@ import com.dubbo.entity.ServiceClass;
 import com.dubbo.entity.ServiceMethod;
 import com.dubbo.entity.ServiceParam;
 import com.dubbo.util.ClassMatchUtil;
+import com.dubbo.util.CommonUtil;
 import com.dubbo.util.ConfigUtil;
 import com.dubbo.util.DubboUtil;
 import com.dubbo.util.FileUtil;
@@ -115,6 +116,8 @@ public class DubboUI extends JPanel{
 	private static String[] titles = {"编号","服务名", "规则","开发人"};
 	
 	private static String[] classParamTitles = {"类名"};
+	
+	private static String dubbonConnect=""; 
 	
 	public DubboUI() {
 		this.setLayout(new BorderLayout());
@@ -708,7 +711,7 @@ public class DubboUI extends JPanel{
 					
 				}finally {
 					endTime=System.currentTimeMillis();
-					resultTextArea.setText("耗时："+(endTime-startTime)+"ms:\r\n\r\n"+StringUtil.jsonPrettyFormat(responseMsg));
+					resultTextArea.setText("请求"+dubbonConnect+"耗时："+(endTime-startTime)+"ms:\r\n\r\n"+StringUtil.jsonPrettyFormat(responseMsg));
 				} 
 			}
 
@@ -722,7 +725,7 @@ public class DubboUI extends JPanel{
 					for(String addr:zkLineSet){
 						addresses=addresses+addr+"\r\n";
 					}
-					FileUtil.saveFile(address, PATH_DEFAULT+ZKCONFIG_LIST);
+					FileUtil.saveFile(addresses, PATH_DEFAULT+ZKCONFIG_LIST);
 					zkLineSet.add(address);
 					refreshZkListComboBox(zkLineSet);
 					zkListComboBox.setSelectedItem(address);
@@ -758,9 +761,11 @@ public class DubboUI extends JPanel{
 				map.put("methodName", methodName);
 				map.put("params", params);
 				
-				String response=DubboUtil.invokeDubbo(dubboConnectList.get(0), map);
+				dubbonConnect=dubboConnectList.get(CommonUtil.getRandom(dubboConnectList.size()));
 				
-				LoggerUtil.info("响应:"+JSON.toJSONString(response));
+				String response=DubboUtil.invokeDubbo(dubbonConnect, map);
+				
+				LoggerUtil.info(dubbonConnect+" 响应:"+JSON.toJSONString(response));
 					
 				return response;
 			}

@@ -207,10 +207,17 @@ public class StringUtil {
 
 	
 	public static String jsonPrettyFormat(String jsonStr){
+		Map resultMap=null;
+		String result="";
+		try {
+			resultMap=JSON.parseObject(jsonStr, Map.class);
+			result=JSON.toJSONString(resultMap, true);
+		} catch (Exception e) {
+			LoggerUtil.error(e);
+			result=jsonStr;
+		}
 		
-		Map resultMap=JSON.parseObject(jsonStr, Map.class);
-		
-		return JSON.toJSONString(resultMap, true);
+		return result;
 	}
 	
 	

@@ -1,6 +1,5 @@
 package com.dubbo.util;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -10,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
@@ -21,6 +20,8 @@ import com.client.comm.FHBException;
 public class ZKUtil {
 	
 	private static ZooKeeper zk = null;
+	
+	private static Map<String, ZooKeeper> zooKeeperMap=new ConcurrentHashMap<>();
 	
 	private static String DUBBO_SERVICE_PATH_TEMPLATE = "/dubbo/#dubboservice#/providers";
 	
@@ -37,6 +38,8 @@ public class ZKUtil {
 	
 	public static void connectZK(String connectUrl){
 		
+		zk = zooKeeperMap.get(connectUrl);
+		
 		if(zk!=null){
 			
 			return ;
@@ -45,8 +48,10 @@ public class ZKUtil {
 		
 		try {
 			LoggerUtil.info("连接zk服务");
-			zk = new ZooKeeper(connectUrl,20000,
+			ZooKeeper zk0 = new ZooKeeper(connectUrl,20000,
 			        new MyWatcher(), true);
+			zk=zk0;
+			zooKeeperMap.put(connectUrl, zk0);
 		} catch (Exception e) {
 			LoggerUtil.error("连接zk服务异常",e);
 		}
@@ -73,8 +78,8 @@ public class ZKUtil {
 			}
 			
 		} catch (Exception e) {
-			
-			throw new FHBException("��ȡdubbo�����ṩ����Ϣ�쳣!");
+			e.printStackTrace();
+			throw new FHBException("获取dubbo服务地址列表失败!");
 		} 
 		return returnList;
 	}
