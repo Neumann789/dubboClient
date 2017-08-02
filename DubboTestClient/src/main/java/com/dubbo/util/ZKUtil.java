@@ -129,7 +129,7 @@ public class ZKUtil {
 	
     private static class MyWatcher implements Watcher {
         public void process(WatchedEvent event) {
-            LoggerUtil.info("�����¼���"+event);
+            LoggerUtil.info("收到zk通知："+event);
         }
     }
 

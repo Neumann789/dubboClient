@@ -78,11 +78,13 @@ public class ConfigUtil {
 				
 			}
 			
-			result=result.substring(0, result.lastIndexOf(split));
+			if(result.contains(split)){
+				result=result.substring(0, result.lastIndexOf(split));
+			}
 			
 		} catch (Exception e) {
 			
-			LoggerUtil.error(filePath+"�ļ���ȡʧ�ܣ�ʧ��ԭ��:"+e.getMessage());
+			LoggerUtil.error(filePath+"读取配置数据异常:"+e.getMessage());
 		
 		}
 		
@@ -129,7 +131,7 @@ public class ConfigUtil {
 			}
 		
 		} catch (Exception e) {
-			throw new FHBException(path+"�ļ������쳣��"+e.getMessage());
+			throw new FHBException(path+"读取数据异常！"+e.getMessage());
 		}
 		
 		return treeMap;

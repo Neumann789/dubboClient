@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -113,7 +114,7 @@ public class DubboUI extends JPanel{
 	
 	private static TreeMap<Integer, DubboServiceEntity> dubboServiceTreeMap=new TreeMap<Integer, DubboServiceEntity>();
 	
-	private static String[] titles = {"编号","服务名", "规则","开发人"};
+	private static String[] titles = {"服务名", "规则","开发人"};
 	
 	private static String[] classParamTitles = {"类名"};
 	
@@ -174,6 +175,13 @@ public class DubboUI extends JPanel{
 	
 	private static void refreshDubboList(){
 		dubboServiceTreeMap=ConfigUtil.readDubboServices(PATH_DEFAULT+DUBBO_LIST);
+		if(dubboServiceTreeMap.isEmpty()){
+			DubboServiceEntity dubboServiceEntity = new DubboServiceEntity();
+			dubboServiceEntity.setServiceName("test");
+			dubboServiceEntity.setServiceDeveloper("sys");
+			dubboServiceEntity.setServiceRule("*facade*");
+			dubboServiceTreeMap.put(-1, dubboServiceEntity);
+		}
 	}
 	
 	private static void refreshZkList(){
@@ -224,7 +232,7 @@ public class DubboUI extends JPanel{
 				//PackageUtil.loadFacadeClassFromJars(serviceClassList, jarFilePathArr);
 				serviceClassList.clear();
 				PackageUtil.loadDubboServiceFromJars(serviceClassList, jarFilePathArr, dubboServiceTreeMap);
-				LoggerUtil.info(jarFilePathArr+"加载成功!");
+				LoggerUtil.info(Arrays.asList(jarFilePathArr)+"加载成功!");
 			} catch (Exception e) {
 				LoggerUtil.error(jarFilePathArr+"加载失败:"+e.getMessage());
 			}
@@ -499,9 +507,11 @@ public class DubboUI extends JPanel{
 					public void actionPerformed(ActionEvent e) {
 						
 						if(!ruleContentJPanel.isVisible()){
-							
-							ruleContentArea.setText( ConfigUtil.readFile(PATH_DEFAULT+DUBBO_LIST,"\r\n"));
-							
+							String ruleText=ConfigUtil.readFile(PATH_DEFAULT+DUBBO_LIST,"\r\n");
+							if(ruleText.trim().length()==0){
+								ruleText="test|*facade*|sys";
+							}
+							ruleContentArea.setText( ruleText);
 							ruleContentJPanel.setVisible(true);
 						}
 						
@@ -838,12 +848,12 @@ public class DubboUI extends JPanel{
     	if(dubboServiceTreeMap.isEmpty()){
     		
     		return new Object[][]{
-    				{"0","service","*Service*","test"}
+    				{"test","*facade*","sys"}
     		};
     		
     	}
     	
-    	Object[][] columnList=new Object[dubboServiceTreeMap.size()][4];
+    	Object[][] columnList=new Object[dubboServiceTreeMap.size()][3];
     	
     	
     	Set<Entry<Integer, DubboServiceEntity>> entrySet=dubboServiceTreeMap.entrySet();
@@ -853,7 +863,6 @@ public class DubboUI extends JPanel{
     	for(int i=0;i<entrySet.size();iterator.hasNext()) {
     		Entry<Integer, DubboServiceEntity> e = iterator.next();
     		columnList[i]=new Object[]{
-    				e.getKey(),
     				e.getValue().getServiceName(),
     				e.getValue().getServiceRule(),
     				e.getValue().getServiceDeveloper()
