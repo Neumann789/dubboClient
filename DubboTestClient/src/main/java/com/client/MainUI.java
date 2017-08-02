@@ -46,7 +46,7 @@ public class MainUI {
         // 确保一个漂亮的外观风格
 
         // 创建及设置窗口
-        JFrame frame = new JFrame("爱问");
+        JFrame frame = new JFrame("爱问(870241856@qq.com联系)");
        // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // 添加 "Hello World" 标签
