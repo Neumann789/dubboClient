@@ -33,7 +33,7 @@ public class FileUtil {
 				if(destFile.delete()){
 					destFile.createNewFile();
 				}else{
-					throw new Exception("´æÔÚÍ¬ÃûÎÄ¼ş!");
+					throw new Exception("ï¿½ï¿½ï¿½ï¿½Í¬ï¿½ï¿½ï¿½Ä¼ï¿½!");
 				}
 			}
 			
@@ -51,8 +51,8 @@ public class FileUtil {
 	            os.write(buf,0,temp);
 	        } 
 		} catch (Exception e) {
-			LoggerUtil.error("ÒÆ¶¯ÎÄ¼şÊ§°Ü:"+e.getMessage());
-			throw new RuntimeException("ÒÆ¶¯ÎÄ¼şÊ§°Ü:"+e.getMessage());
+			LoggerUtil.error("ï¿½Æ¶ï¿½ï¿½Ä¼ï¿½Ê§ï¿½ï¿½:"+e.getMessage());
+			throw new RuntimeException("ï¿½Æ¶ï¿½ï¿½Ä¼ï¿½Ê§ï¿½ï¿½:"+e.getMessage());
 		}finally {
 			try{
 				if(is!=null){
@@ -63,8 +63,8 @@ public class FileUtil {
 				}
             }
             catch(Exception e2){
-                LoggerUtil.error("ÒÆ¶¯ÎÄ¼şÊ§°Ü:"+e2.getMessage());
-                throw new RuntimeException("ÒÆ¶¯ÎÄ¼şÊ§°Ü:"+e2.getMessage());
+                LoggerUtil.error("ï¿½Æ¶ï¿½ï¿½Ä¼ï¿½Ê§ï¿½ï¿½:"+e2.getMessage());
+                throw new RuntimeException("ï¿½Æ¶ï¿½ï¿½Ä¼ï¿½Ê§ï¿½ï¿½:"+e2.getMessage());
             }
 		}
 		
@@ -89,8 +89,8 @@ public class FileUtil {
 				}
 			}
 		} catch (Exception e) {
-			LoggerUtil.error("ÎÄ¼ş½âÎöÊ§°Ü:"+e.getMessage());
-			throw new FHBException("ÎÄ¼ş½âÎöÊ§°Ü:"+e.getMessage());
+			LoggerUtil.error("ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½:"+e.getMessage());
+			throw new FHBException("ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½:"+e.getMessage());
 		}finally{
 			if(br!=null){
 				try {
@@ -116,7 +116,7 @@ public class FileUtil {
 			
 		} catch (Exception e) {
 			
-			throw new FHBException("±£´æÎÄ¼şÒì³££º"+e.getMessage());
+			throw new FHBException("æ•°æ®è½æ–‡ä»¶å¼‚å¸¸:"+e.getMessage());
 			
 		}finally {
 			

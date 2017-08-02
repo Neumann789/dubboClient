@@ -44,11 +44,11 @@ public class ZKUtil {
 		}
 		
 		try {
-			LoggerUtil.info("Á¬½Ózk......");
+			LoggerUtil.info("è¿æ¥zkæœåŠ¡");
 			zk = new ZooKeeper(connectUrl,20000,
 			        new MyWatcher(), true);
 		} catch (Exception e) {
-			LoggerUtil.error("zkÁ¬½ÓÒì³£:",e);
+			LoggerUtil.error("è¿æ¥zkæœåŠ¡å¼‚å¸¸",e);
 		}
 	}
 	/**
@@ -74,7 +74,7 @@ public class ZKUtil {
 			
 		} catch (Exception e) {
 			
-			throw new FHBException("»ñÈ¡dubbo·şÎñÌá¹©ÕßĞÅÏ¢Òì³£!");
+			throw new FHBException("ï¿½ï¿½È¡dubboï¿½ï¿½ï¿½ï¿½ï¿½á¹©ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ì³£!");
 		} 
 		return returnList;
 	}
@@ -114,7 +114,7 @@ public class ZKUtil {
 			len=ins.read(tt, 0, tt.length);
 			result = new String(tt,0,len,"gbk");
 			result = result.split("\r\n")[0];
-			LoggerUtil.info("dubbo·µ»Ø½á¹û£º"+result);
+			LoggerUtil.info("dubboï¿½ï¿½ï¿½Ø½ï¿½ï¿½"+result);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -124,7 +124,7 @@ public class ZKUtil {
 	
     private static class MyWatcher implements Watcher {
         public void process(WatchedEvent event) {
-            LoggerUtil.info("¼àÌıÊÂ¼ş£º"+event);
+            LoggerUtil.info("ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½"+event);
         }
     }
 

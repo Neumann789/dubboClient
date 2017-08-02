@@ -38,7 +38,7 @@ public class ConfigUtil {
 			
 		} catch (Exception e) {
 			
-			LoggerUtil.error(filePath+"ÎÄ¼ş¶ÁÈ¡Ê§°Ü£¬Ê§°ÜÔ­Òò:"+e.getMessage());
+			LoggerUtil.error(filePath+"è¯»å–æ•°æ®å¼‚å¸¸:"+e.getMessage());
 		
 		}
 		
@@ -49,7 +49,7 @@ public class ConfigUtil {
 	/**
 	 * 
 	 * @param filePath
-	 * @param split     Ö¸¶¨·Ö¸î·û
+	 * @param split     Ö¸ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½
 	 * @return
 	 */
 	public static String readFile(String filePath,String split){
@@ -82,7 +82,7 @@ public class ConfigUtil {
 			
 		} catch (Exception e) {
 			
-			LoggerUtil.error(filePath+"ÎÄ¼ş¶ÁÈ¡Ê§°Ü£¬Ê§°ÜÔ­Òò:"+e.getMessage());
+			LoggerUtil.error(filePath+"ï¿½Ä¼ï¿½ï¿½ï¿½È¡Ê§ï¿½Ü£ï¿½Ê§ï¿½ï¿½Ô­ï¿½ï¿½:"+e.getMessage());
 		
 		}
 		
@@ -93,7 +93,7 @@ public class ConfigUtil {
 	
 
 	/**
-	 * Íø¹Ø·şÎñ|com.zb.payment.MgwService|·½»ª±£
+	 * ï¿½ï¿½Ø·ï¿½ï¿½ï¿½|com.zb.payment.MgwService|ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * @param path
 	 * @return
 	 */
@@ -129,7 +129,7 @@ public class ConfigUtil {
 			}
 		
 		} catch (Exception e) {
-			throw new FHBException(path+"ÎÄ¼ş½âÎöÒì³££º"+e.getMessage());
+			throw new FHBException(path+"ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì³£ï¿½ï¿½"+e.getMessage());
 		}
 		
 		return treeMap;

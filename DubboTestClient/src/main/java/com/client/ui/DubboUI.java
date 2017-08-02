@@ -305,18 +305,17 @@ public class DubboUI extends JPanel{
     	jpParamButtonAndContentList.add(paramsBox);
     	
     	Box resultBox=Box.createVerticalBox();
-    	Box resultHoriBox=Box.createHorizontalBox();
-    	final JButton jsonFormatJButton=new JButton("格式化");
-    	resultHoriBox.add(new JLabel("结果:"));
-    	resultHoriBox.add(Box.createHorizontalStrut(300));
-    	resultHoriBox.add(jsonFormatJButton);
-    	resultBox.add(resultHoriBox);
+    	//Box resultHoriBox=Box.createHorizontalBox();
+    	//final JButton jsonFormatJButton=new JButton("格式化");
+    	//resultHoriBox.add(new JLabel("结果"));
+    	//resultHoriBox.add(jsonFormatJButton);
+    	resultBox.add(new JLabel("结果",JLabel.CENTER));
     	resultTextArea.setEditable(false);
     	resultBox.add(resultTextArea);
     	jpDown.add(resultBox);
     	
     	
-    	jsonFormatJButton.addActionListener(new ActionListener() {
+    	/*jsonFormatJButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -327,7 +326,7 @@ public class DubboUI extends JPanel{
 				resultTextArea.setText(resultArr[0]+"\r\n\r\n"+resultArr[1]);
 			}
     		
-    	});
+    	});*/
     	
     	
     	
@@ -709,7 +708,7 @@ public class DubboUI extends JPanel{
 					
 				}finally {
 					endTime=System.currentTimeMillis();
-					resultTextArea.setText("耗时："+(endTime-startTime)+"ms:\r\n\r\n"+responseMsg);
+					resultTextArea.setText("耗时："+(endTime-startTime)+"ms:\r\n\r\n"+StringUtil.jsonPrettyFormat(responseMsg));
 				} 
 			}
 
@@ -718,9 +717,18 @@ public class DubboUI extends JPanel{
 				String responseMsg;
 				String address=zkListComboBox.getSelectedItem().toString().trim();
 				
-				FileUtil.saveFile(address, PATH_DEFAULT+ZKCONFIG_LIST);
-				zkLineSet.add(address);
-				refreshZkListComboBox(zkLineSet);
+				if(!zkLineSet.contains(address)){
+					String addresses="";
+					for(String addr:zkLineSet){
+						addresses=addresses+addr+"\r\n";
+					}
+					FileUtil.saveFile(address, PATH_DEFAULT+ZKCONFIG_LIST);
+					zkLineSet.add(address);
+					refreshZkListComboBox(zkLineSet);
+					zkListComboBox.setSelectedItem(address);
+				}
+				
+				
 				
 				
 				

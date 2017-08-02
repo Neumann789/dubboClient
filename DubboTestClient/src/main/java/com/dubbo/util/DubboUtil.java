@@ -79,7 +79,6 @@ public class DubboUtil {
 			len=ins.read(tt, 0, tt.length);
 			result = new String(tt,0,len,"gbk");
 			result = result.split("\r\n")[0];
-			LoggerUtil.info("dubbo·µ»Ø½á¹û£º"+result);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -119,7 +118,7 @@ public class DubboUtil {
 		// ReferenceCountExchangeClient ReferenceCountExchangeClient=new
 		// ReferenceCountExchangeClient();
 		Result result = new DubboInvoker(serviceType, url, clients).invoke(invocation);
-		LoggerUtil.info("·µ»ØÊý¾Ý£º" + JSONObject.toJSONString(result));
+		LoggerUtil.info("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý£ï¿½" + JSONObject.toJSONString(result));
 
 	}
 
@@ -170,7 +169,7 @@ public class DubboUtil {
 
 		Object obj = future.get();
 
-		LoggerUtil.info("·µ»ØÊý¾Ý£º" + JSONObject.toJSONString(obj));
+		LoggerUtil.info("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý£ï¿½" + JSONObject.toJSONString(obj));
 	}
 
 	public static RpcInvocation getInvocation() {
@@ -178,11 +177,11 @@ public class DubboUtil {
 		RpcInvocation invocation = new RpcInvocation();
 
 		HFTXPayRequest request = new HFTXPayRequest();
-		request.setChannelSystemId("CHINAPNRYW0606");// ÇþµÀ±àºÅ¡¾±ØÊä¡¿
-		request.setExchangeTypeId("06");// ½»»»ÀàÐÍ¡¾±ØÊä¡¿
+		request.setChannelSystemId("CHINAPNRYW0606");// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¡ï¿½ï¿½ï¿½ï¿½ä¡¿
+		request.setExchangeTypeId("06");// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¡ï¿½ï¿½ï¿½ï¿½ä¡¿
 		request.setOrderNo("1498474395585");
-		request.setCertId("340826199202172456");// ÓÃ»§Éí·ÝÖ¤ºÅ ¡¾±ØÊä¡¿
-		request.setReqExt("");// À©Õ¹Óò ·Ç±ØÊä
+		request.setCertId("340826199202172456");// ï¿½Ã»ï¿½ï¿½ï¿½ï¿½Ö¤ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ä¡¿
+		request.setReqExt("");// ï¿½ï¿½Õ¹ï¿½ï¿½ ï¿½Ç±ï¿½ï¿½ï¿½
 
 		invocation.setArguments(new Object[] { request });
 		invocation.setMethodName("syncSendAndReceive");
@@ -215,16 +214,16 @@ public class DubboUtil {
 		YWTransReceiverService transReceiverService = (YWTransReceiverService) DubboUtil
 				.getDubboService("192.168.224.199:2181", YWTransReceiverService.class);
 		HFTXPayRequest request = new HFTXPayRequest();
-		request.setChannelSystemId("CHINAPNRYW0606");// ÇþµÀ±àºÅ¡¾±ØÊä¡¿
-		request.setExchangeTypeId("06");// ½»»»ÀàÐÍ¡¾±ØÊä¡¿
+		request.setChannelSystemId("CHINAPNRYW0606");// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¡ï¿½ï¿½ï¿½ï¿½ä¡¿
+		request.setExchangeTypeId("06");// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¡ï¿½ï¿½ï¿½ï¿½ä¡¿
 		request.setOrderNo("1498474395585");
-		request.setCertId("340826199202172456");// ÓÃ»§Éí·ÝÖ¤ºÅ ¡¾±ØÊä¡¿
-		request.setReqExt("");// À©Õ¹Óò ·Ç±ØÊä
+		request.setCertId("340826199202172456");// ï¿½Ã»ï¿½ï¿½ï¿½ï¿½Ö¤ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ä¡¿
+		request.setReqExt("");// ï¿½ï¿½Õ¹ï¿½ï¿½ ï¿½Ç±ï¿½ï¿½ï¿½
 		transReceiverService.syncSendAndReceive(request);
 		MgwResult<AbstractResponse> resp = transReceiverService.syncSendAndReceive(request);
-		LoggerUtil.info("·µ»Ø×´Ì¬£º" + resp.getRspCode());
-		LoggerUtil.info("·µ»ØËµÃ÷£º" + resp.getRspMsg());
-		LoggerUtil.info("·µ»ØÊý¾Ý£º" + JSONObject.toJSONString(resp));
+		LoggerUtil.info("ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½" + resp.getRspCode());
+		LoggerUtil.info("ï¿½ï¿½ï¿½ï¿½Ëµï¿½ï¿½ï¿½ï¿½" + resp.getRspMsg());
+		LoggerUtil.info("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý£ï¿½" + JSONObject.toJSONString(resp));
 	}
 */
 }

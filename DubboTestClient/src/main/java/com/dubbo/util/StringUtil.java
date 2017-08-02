@@ -81,7 +81,7 @@ public class StringUtil {
 				}else{
 					
 					try {
-						if(instance.getClass()==type){//ÈçºÎ¶ÔÏóÖÐ°üº¬±¾Éí
+						if(instance.getClass()==type){//ï¿½ï¿½Î¶ï¿½ï¿½ï¿½ï¿½Ð°ï¿½ï¿½ï¿½
 							value=new HashMap<>();
 						}else{
 							value=type.newInstance();
@@ -156,7 +156,7 @@ public class StringUtil {
 				}else{
 					
 					try {
-						if(instance.getClass()==type){//ÈçºÎ¶ÔÏóÖÐ°üº¬±¾Éí
+						if(instance.getClass()==type){//ï¿½ï¿½Î¶ï¿½ï¿½ï¿½ï¿½Ð°ï¿½ï¿½ï¿½
 							value=new HashMap<>();
 						}else{
 							value=type.newInstance();
@@ -202,6 +202,15 @@ public class StringUtil {
 	
 	public static String capitalize(String str) {
 		return changeFirstCharacterCase(str, true);
+	}
+	
+
+	
+	public static String jsonPrettyFormat(String jsonStr){
+		
+		Map resultMap=JSON.parseObject(jsonStr, Map.class);
+		
+		return JSON.toJSONString(resultMap, true);
 	}
 	
 	
