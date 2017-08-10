@@ -116,6 +116,7 @@ public class MainUI {
     	JMenu jmView=new JMenu("视图");
     	JMenu jmNavi=new JMenu("导航");
     	JMenu jmSet=new JMenu("设置");
+    	JMenu jmPlugin=new JMenu("插件");
     	JMenu jmHelp=new JMenu("帮助");
     	JMenu jmAbout=new JMenu("关于");
     	
@@ -123,6 +124,7 @@ public class MainUI {
     	jmb.add(jmView);
     	jmb.add(jmNavi);
     	jmb.add(jmSet);
+    	jmb.add(jmPlugin);
     	jmb.add(jmHelp);
     	jmb.add(jmAbout);
     	
@@ -156,8 +158,8 @@ public class MainUI {
     	jmHelp.addSeparator();
     	jmHelp.add(jmiHelp2);
     	
-    	JMenuItem jmiAbout1=new JMenuItem("子关于1");
-    	JMenuItem jmiAbout2=new JMenuItem("子关于2");
+    	JMenuItem jmiAbout1=new JMenuItem("软件");
+    	JMenuItem jmiAbout2=new JMenuItem("作者");
     	jmAbout.add(jmiAbout1);
     	jmAbout.addSeparator();
     	jmAbout.add(jmiAbout2);

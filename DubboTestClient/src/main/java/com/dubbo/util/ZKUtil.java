@@ -30,8 +30,8 @@ public class ZKUtil {
 //		String connect=extractConnectFromUrl(str);
 //		System.out.println("dubbo connect :"+connect);
 		
-		connectZK("192.168.224.199:2181");
-		List<String> resultList=getDubboServiceInfoList("com.zb.payment.yw.fir.facade.service.YWFirService");
+		connectZK("192.168.0.65:2181");
+		List<String> resultList=getDubboServiceInfoList("com.zb.payment.yw.mgw.facade.service.YWTransReceiverService");
 		System.out.println(resultList);
 	}
 	

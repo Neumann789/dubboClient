@@ -81,10 +81,15 @@ public class StringUtil {
 				}else{
 					
 					try {
-						if(instance.getClass()==type){//��ζ����а���
+						if(instance.getClass()==type){//
 							value=new HashMap<>();
 						}else{
-							value=type.newInstance();
+							try {
+								value=type.newInstance();
+							} catch (Exception e) {
+								value=new HashMap<>();
+							}
+							
 						}
 						
 					} catch (Exception e) {
@@ -233,6 +238,8 @@ public class StringUtil {
 		 * D:\\dubbclient\\jars\\test2-facade-0.0.1-SNAPSHOT_20170519.jar
 		 * 
 		 * */
+		
+		System.out.println(jsonPrettyFormat("1111"));
 	}
 
 }
