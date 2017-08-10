@@ -25,6 +25,8 @@ import javax.swing.JToolBar;
 
 import com.dubbo.util.FileUtil;
 import com.dubbo.util.LoggerUtil;
+import com.dubbo.util.PropertiesUtil;
+import com.dubbo.util.RuntimeUtil;
 
 public class MainUI {
 
@@ -43,15 +45,9 @@ public class MainUI {
      * 这个方法在事件调用线程中调用。
      */
     private static void createAndShowGUI() {
-        // 确保一个漂亮的外观风格
-
+    	
         // 创建及设置窗口
-        JFrame frame = new JFrame("爱问(870241856@qq.com联系)");
-       // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        // 添加 "Hello World" 标签
-//        JLabel label = new JLabel("Hello World");
-//        frame.getContentPane().add(label);
+        JFrame frame = new JFrame(PropertiesUtil.getVal("mainui.title"));
         
         fillContent(frame);
         
@@ -65,38 +61,13 @@ public class MainUI {
         
         
         try {
-        	Image image=ImageIO.read(MainUI.class.getResource("/images/plog.png"));
+        	Image image=ImageIO.read(MainUI.class.getResource(PropertiesUtil.getVal("mainui.icon")	));
 			frame.setIconImage(image);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         
-        //添加窗口关闭事件
-        frame.addWindowListener(new WindowAdapter() {
-        	
-        	@Override
-        	public void windowClosing(WindowEvent e) {
-        		// TODO Auto-generated method stub
-        		super.windowClosing(e);
-        		
-        		killSelf();
-        		
-        	}
-        	
-        	
-        	public void killSelf(){
-        		String name = ManagementFactory.getRuntimeMXBean().getName();
-        		String pid = name.split("@")[0];
-        		try {
-        			Runtime.getRuntime().exec("taskkill /PID "+pid+" /F");
-        		} catch (IOException e) {
-        			e.printStackTrace();
-        		}
-        	}
-        	
-        	
-		});
         
     }
 
@@ -128,11 +99,12 @@ public class MainUI {
     	jmb.add(jmHelp);
     	jmb.add(jmAbout);
     	
-    	JMenuItem jmiMenu1=new JMenuItem("子菜单1");
-    	JMenuItem jmiMenu2=new JMenuItem("子菜单2");
-    	jmMenu.add(jmiMenu1);
-    	jmMenu.addSeparator();
+    	JMenuItem jmiMenu2=new JMenuItem("子菜单");
+    	JMenuItem restartMenu=new JMenuItem("重启");
     	jmMenu.add(jmiMenu2);
+    	jmMenu.addSeparator();
+    	jmMenu.add(restartMenu);
+    	
     	
     	JMenuItem jmiView1=new JMenuItem("子视图1");
     	JMenuItem jmiView2=new JMenuItem("子视图2");
@@ -169,6 +141,17 @@ public class MainUI {
     	BorderLayout bl=new BorderLayout();
     	jpUp.setLayout(bl);
     	jpUp.add(BorderLayout.NORTH, jtb);
+    	
+    	
+    	
+    	restartMenu.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//重启
+				restart();
+			}
+		});
     	
 	}
 
@@ -225,6 +208,24 @@ public class MainUI {
 			i++;
 		}
 		
+	}
+	
+	/**
+	 * 重启
+	 */
+	public static void restart(){
+		
+		new Thread(){//开启异步线程 启动程序
+			@Override
+			public void run() {
+				String jarPath=FileUtil.getJarExecPath(MainUI.class);
+				LoggerUtil.info("jarPath==>> "+jarPath);
+				RuntimeUtil.exec("java -jar "+jarPath);
+			}
+		}.start();
+		
+		//当前进程自杀
+		RuntimeUtil.killSelf();
 	}
     
     

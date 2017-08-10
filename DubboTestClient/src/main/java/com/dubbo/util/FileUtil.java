@@ -128,6 +128,21 @@ public class FileUtil {
 		
 	}
 	
+	/**
+	 * 获取当前类所在jar的全路径
+	 * @param clazz
+	 * @return
+	 */
+	public static String getJarExecPath(Class clazz) {
+	    String path = clazz.getProtectionDomain().getCodeSource().getLocation().getPath();
+	    if(path.startsWith("/")){
+	    	path=path.substring(1);
+	    }
+	    return path;
+	}
 	
+	public static void main(String[] args) {
+		System.out.println(getJarExecPath(FileUtil.class));
+	}
 	
 }

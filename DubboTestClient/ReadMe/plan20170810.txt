@@ -1,0 +1,9 @@
+在dev20170810预计会提供如下功能:
+1 支持对dobbu服务的压测
+2 同时支持使用zk地址或dubbo地址来请求dubbo服务
+3 扩展dubboUI，支持对zk的相关功能
+
+
+优化点：
+1 看看是否能减少对zkjar和fastjson的依赖，减少jar的大小
+2 对dubboUI的插件化设计和改造
