@@ -58,6 +58,7 @@ public class MainUI {
         frame.setSize(800, 800);
         frame.setLocationRelativeTo(null);//设置窗口居中
         frame.setResizable(false);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         
         try {

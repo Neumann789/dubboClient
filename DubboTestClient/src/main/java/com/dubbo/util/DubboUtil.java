@@ -70,9 +70,8 @@ public class DubboUtil {
 			pw.flush();
 
 			InputStream ins = socket.getInputStream();
-			Scanner sc = new Scanner(System.in);
 			
-			byte[] tt = new byte[1024];
+			byte[] tt = new byte[BUF_SIZE];
 			int len=0;
 			
 			len=ins.read(tt, 0, tt.length);
