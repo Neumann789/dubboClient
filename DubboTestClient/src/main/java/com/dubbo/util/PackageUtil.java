@@ -158,7 +158,8 @@ public class PackageUtil {
 
 	public static List<ServiceMethod> extractServiceMethods(Class clazz){
 		
-		Method[] methods=clazz.getDeclaredMethods();
+		//Method[] methods=clazz.getDeclaredMethods();//åªèƒ½è·å–å½“å‰ç±»çš„æ–¹æ³•
+		Method[] methods=clazz.getMethods();//è·å–æ‰€æœ‰æ–¹æ³•åŒ…æ‹¬çˆ¶ç±»
 		
 		List<ServiceMethod> serviceMethods=new ArrayList<ServiceMethod>();
 		
@@ -225,7 +226,7 @@ public class PackageUtil {
 
 	public static Set<Class> extractClassListByFilter(List<Class> clazzList, ClassFilter filter) {
 
-		Set<Class> newClassList = new HashSet<Class>();//·ÀÖØ
+		Set<Class> newClassList = new HashSet<Class>();//ï¿½ï¿½ï¿½ï¿½
 
 		for (Class clazz : clazzList) {
 
@@ -273,7 +274,7 @@ public class PackageUtil {
 				classList.add(clazz);
 				// System.out.println(clazz.getName());
 			} catch (Throwable e) {
-				System.out.println(className + "¼ÓÔØÊ§°Ü,Ê§°ÜÔ­Òò£º" + e.getMessage());
+				System.out.println(className + "ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½,Ê§ï¿½ï¿½Ô­ï¿½ï¿½" + e.getMessage());
 			}
 
 		}
@@ -297,7 +298,7 @@ public class PackageUtil {
 				classList.add(clazz);
 				// System.out.println(clazz.getName());
 			} catch (Throwable e) {
-				System.out.println(className + "¼ÓÔØÊ§°Ü,Ê§°ÜÔ­Òò£º" + e.getMessage());
+				System.out.println(className + "ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½,Ê§ï¿½ï¿½Ô­ï¿½ï¿½" + e.getMessage());
 			}
 
 		}
@@ -344,7 +345,7 @@ public class PackageUtil {
 				classList.add(clazz);
 				// System.out.println(clazz.getName());
 			} catch (Throwable e) {
-				System.out.println(className + "¼ÓÔØÊ§°Ü,Ê§°ÜÔ­Òò£º" + e.getMessage());
+				System.out.println(className + "ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½,Ê§ï¿½ï¿½Ô­ï¿½ï¿½" + e.getMessage());
 			}
 
 		}
@@ -380,7 +381,7 @@ public class PackageUtil {
 				paramClassSet.add(clazz);
 				// System.out.println(clazz.getName());
 			} catch (Throwable e) {
-				System.out.println(className + "¼ÓÔØÊ§°Ü,Ê§°ÜÔ­Òò£º" + e.getMessage());
+				System.out.println(className + "ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½,Ê§ï¿½ï¿½Ô­ï¿½ï¿½" + e.getMessage());
 			}
 
 		}
@@ -455,7 +456,7 @@ public class PackageUtil {
 					// System.out.println(clazz.getName());
 				}
 			} catch (Throwable e) {
-				System.out.println(className + "¼ÓÔØÊ§°Ü,Ê§°ÜÔ­Òò£º" + e.getMessage());
+				System.out.println(className + "ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½,Ê§ï¿½ï¿½Ô­ï¿½ï¿½" + e.getMessage());
 			}
 
 		}
@@ -464,24 +465,24 @@ public class PackageUtil {
 	}
 
 	/**
-	 * »ñÈ¡Ä³°üÏÂ£¨°üÀ¨¸Ã°üµÄËùÓĞ×Ó°ü£©ËùÓĞÀà
+	 * ï¿½ï¿½È¡Ä³ï¿½ï¿½ï¿½Â£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @param packageName
-	 *            °üÃû
-	 * @return ÀàµÄÍêÕûÃû³Æ
+	 *            ï¿½ï¿½ï¿½ï¿½
+	 * @return ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	public static List<String> getClassName(String packageName) {
 		return getClassName(packageName, true);
 	}
 
 	/**
-	 * »ñÈ¡Ä³°üÏÂËùÓĞÀà
+	 * ï¿½ï¿½È¡Ä³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @param packageName
-	 *            °üÃû
+	 *            ï¿½ï¿½ï¿½ï¿½
 	 * @param childPackage
-	 *            ÊÇ·ñ±éÀú×Ó°ü
-	 * @return ÀàµÄÍêÕûÃû³Æ
+	 *            ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½Ó°ï¿½
+	 * @return ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	public static List<String> getClassName(String packageName, boolean childPackage) {
 		List<String> fileNames = null;
@@ -502,15 +503,15 @@ public class PackageUtil {
 	}
 
 	/**
-	 * ´ÓÏîÄ¿ÎÄ¼ş»ñÈ¡Ä³°üÏÂËùÓĞÀà
+	 * ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½Ä¼ï¿½ï¿½ï¿½È¡Ä³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @param filePath
-	 *            ÎÄ¼şÂ·¾¶
+	 *            ï¿½Ä¼ï¿½Â·ï¿½ï¿½
 	 * @param className
-	 *            ÀàÃû¼¯ºÏ
+	 *            ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * @param childPackage
-	 *            ÊÇ·ñ±éÀú×Ó°ü
-	 * @return ÀàµÄÍêÕûÃû³Æ
+	 *            ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½Ó°ï¿½
+	 * @return ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	private static List<String> getClassNameByFile(String filePath, List<String> className, boolean childPackage) {
 		List<String> myClassName = new ArrayList<String>();
@@ -536,13 +537,13 @@ public class PackageUtil {
 	}
 
 	/**
-	 * ´Ójar»ñÈ¡Ä³°üÏÂËùÓĞÀà
+	 * ï¿½ï¿½jarï¿½ï¿½È¡Ä³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @param jarPath
-	 *            jarÎÄ¼şÂ·¾¶
+	 *            jarï¿½Ä¼ï¿½Â·ï¿½ï¿½
 	 * @param childPackage
-	 *            ÊÇ·ñ±éÀú×Ó°ü
-	 * @return ÀàµÄÍêÕûÃû³Æ
+	 *            ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½Ó°ï¿½
+	 * @return ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	private static List<String> getClassNameByJar(String jarPath, boolean childPackage) {
 		List<String> myClassName = new ArrayList<String>();
@@ -583,15 +584,15 @@ public class PackageUtil {
 	}
 
 	/**
-	 * ´ÓËùÓĞjarÖĞËÑË÷¸Ã°ü£¬²¢»ñÈ¡¸Ã°üÏÂËùÓĞÀà
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½jarï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½Ã°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @param urls
-	 *            URL¼¯ºÏ
+	 *            URLï¿½ï¿½ï¿½ï¿½
 	 * @param packagePath
-	 *            °üÂ·¾¶
+	 *            ï¿½ï¿½Â·ï¿½ï¿½
 	 * @param childPackage
-	 *            ÊÇ·ñ±éÀú×Ó°ü
-	 * @return ÀàµÄÍêÕûÃû³Æ
+	 *            ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½Ó°ï¿½
+	 * @return ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	private static List<String> getClassNameByJars(URL[] urls, String packagePath, boolean childPackage) {
 		List<String> myClassName = new ArrayList<String>();
@@ -599,7 +600,7 @@ public class PackageUtil {
 			for (int i = 0; i < urls.length; i++) {
 				URL url = urls[i];
 				String urlPath = url.getPath();
-				// ²»±ØËÑË÷classesÎÄ¼ş¼Ğ
+				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½classesï¿½Ä¼ï¿½ï¿½ï¿½
 				if (urlPath.endsWith("classes/")) {
 					continue;
 				}
@@ -611,13 +612,13 @@ public class PackageUtil {
 	}
 
 	/**
-	 * ´Ójar»ñÈ¡Ä³°üÏÂËùÓĞÀà
+	 * ï¿½ï¿½jarï¿½ï¿½È¡Ä³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @param jarPath
-	 *            jarÎÄ¼şÂ·¾¶
+	 *            jarï¿½Ä¼ï¿½Â·ï¿½ï¿½
 	 * @param childPackage
-	 *            ÊÇ·ñ±éÀú×Ó°ü
-	 * @return ÀàµÄÍêÕûÃû³Æ
+	 *            ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½Ó°ï¿½
+	 * @return ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	private static List<String> getClassListByJarFile(String jarFilePath, boolean childPackage) {
 		List<String> classList = new ArrayList<String>();
@@ -698,7 +699,7 @@ public class PackageUtil {
 		
 		for(Class childClass:paramClassSet){
 			
-			if(parentClass.isAssignableFrom(childClass)&&childClass!=parentClass) {//¸¸×ÓÀà¹ØÏµ
+			if(parentClass.isAssignableFrom(childClass)&&childClass!=parentClass) {//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ïµ
 				childClassList.add(childClass);
 			}
 			
@@ -712,7 +713,7 @@ public class PackageUtil {
 		
 		for(Class clazz:paramClassSet){
 			
-			if(clazz.getName().equals(className)) {//¸¸×ÓÀà¹ØÏµ
+			if(clazz.getName().equals(className)) {//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ïµ
 				return clazz;
 			}
 			
@@ -723,13 +724,14 @@ public class PackageUtil {
 	}
 	
 	public static void main(String[] args) {
-		paramClassSet.add(DubboUI.class);
+		/*paramClassSet.add(DubboUI.class);
 		paramClassSet.add(HttpUI.class);
 		paramClassSet.add(String.class);
 		
 		List<Class> childClassList=getChildClassList(JPanel.class);
 		for(Class clazz:childClassList){
 			System.out.println(clazz.getName());
-		}
+		}*/
+		
 	}
 }

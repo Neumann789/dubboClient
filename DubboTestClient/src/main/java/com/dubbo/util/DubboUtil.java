@@ -7,7 +7,8 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class DubboUtil {
-
+	
+	private static int BUF_SIZE=1024*1024;
 
 	public static String invokeDubbo(String dubboUrl, Map<String, String> map) {
 
@@ -37,16 +38,18 @@ public class DubboUtil {
 			pw.flush();
 
 			InputStream ins = socket.getInputStream();
-			byte[] tt = new byte[1024];
-			ins.read(tt, 0, tt.length);
+			
 
 			pw.write("invoke " + request + "\r\n");
 			pw.flush();
+			
+			byte[] tt = new byte[BUF_SIZE];
+			
 			ins.read(tt, 0, tt.length);
 			result = new String(tt, "gbk");
 			LoggerUtil.info(result);
 		} catch (Exception e) {
-			
+			e.printStackTrace();
 		}
 
 		return result;
