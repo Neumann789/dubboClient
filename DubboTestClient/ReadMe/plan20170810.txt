@@ -1,3 +1,5 @@
+打包使用：mvn assembly:assembly命令来打
+
 在dev20170810预计会提供如下功能:
 1 支持对dobbu服务的压测
 2 同时支持使用zk地址或dubbo地址来请求dubbo服务
