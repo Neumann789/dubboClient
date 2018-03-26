@@ -22,6 +22,8 @@ public class DubboUtil {
 		
 		int port=Integer.parseInt(dubboUrl.split(":")[1]);
 		
+		LoggerUtil.info("请求:"+request);
+		
 		return telnetDubbo(ip, port, request);
 	}
 

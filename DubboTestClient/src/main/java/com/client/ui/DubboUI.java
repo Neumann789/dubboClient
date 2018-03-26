@@ -762,9 +762,11 @@ public class DubboUI extends JPanel{
 				
 				String params="";
 				for(int i=0;i<serviceParamList.size();i++){
-					params=textAreaParamList.get(i).getText().trim()+",";
+					params=params+textAreaParamList.get(i).getText().trim()+",";
 				}
-				params=params.substring(0, params.length()-1);//去除最后一个逗号
+				if(params.length()>0){
+					params=params.substring(0, params.length()-1);//去除最后一个逗号
+				}
 				
 				Map<String , String> map=new HashMap<>();
 				map.put("className", className);

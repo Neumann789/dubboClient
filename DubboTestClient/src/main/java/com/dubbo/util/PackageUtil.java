@@ -5,11 +5,14 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -189,6 +192,41 @@ public class PackageUtil {
 						serviceParam.setAbstract(true);
 						 Map<String,ServiceParam> childrenParamMap=getChildrenParamMap(paramTypes[j]);
 						serviceParam.setChildrenParamMap(childrenParamMap);
+					}else if(paramTypes[j].isPrimitive()){
+						Object value = null;
+						if(
+								paramTypes[j].isAssignableFrom(Byte.class)||
+								paramTypes[j].isAssignableFrom(byte.class)||
+								paramTypes[j].isAssignableFrom(Character.class)||
+								paramTypes[j].isAssignableFrom(Short.class)||
+								paramTypes[j].isAssignableFrom(char.class)||
+								paramTypes[j].isAssignableFrom(Integer.class)||
+								paramTypes[j].isAssignableFrom(int.class)||
+								paramTypes[j].isAssignableFrom(Long.class)||
+								paramTypes[j].isAssignableFrom(long.class)
+						){
+							value=0;
+							
+						}else if(paramTypes[j].isAssignableFrom(Boolean.class)||paramTypes[j].isAssignableFrom(boolean.class)){
+							
+							value = true;
+							
+						}else if(paramTypes[j].isAssignableFrom(Float.class)||paramTypes[j].isAssignableFrom(float.class)){
+							value = 0.0f;
+						}else if(paramTypes[j].isAssignableFrom(Double.class)||paramTypes[j].isAssignableFrom(double.class) ){
+							value = 0.0;
+						}else if(paramTypes[j].isAssignableFrom(Timestamp.class)){
+							value = new Timestamp(new Date().getTime());
+						}else if(paramTypes[j].isAssignableFrom(BigDecimal.class)){
+							value =new BigDecimal(0);
+						}else if(paramTypes[j].isAssignableFrom(List.class)){
+							value =new ArrayList<>();
+						}else if(paramTypes[j].isAssignableFrom(Map.class)){
+							value =new HashMap<>();
+						}else if(paramTypes[j].isArray()){
+							value ="[{}]";
+						}
+						serviceParam.setParamJsonContent(value.toString());
 					}else{
 						serviceParam.setParamJsonContent(StringUtil.genJsonStrPrettyFormat(paramTypes[j].newInstance()));
 					}
